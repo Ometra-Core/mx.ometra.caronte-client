@@ -1,0 +1,28 @@
+<?php
+
+namespace Equidna\Caronte\Commands\CrudRoles;
+
+use Equidna\Caronte\AppBound;
+use Equidna\Caronte\Commands\SuperCommand;
+
+use function Laravel\Prompts\text;
+
+class CreateRole extends SuperCommand
+{
+    protected $signature = 'caronte-client:create-role';
+    protected $description = 'Create Roles within the application';
+
+    public function executeCommand()
+    {
+        $name = text('Escribe el nombre del nuevo rol:');
+        $description = text('Escribe la descripción del nuevo rol:');
+        $response = AppBound::createRole(description: $description, name: $name);
+        if ($response->getStatusCode() !== 200) {
+            $this->error("Error al crear el rol: " . $response->getContent());
+            return 1;
+        }
+        $this->info("¡Listo! El rol '{$name}' ha sido creado exitosamente.");
+
+        return 0;
+    }
+}

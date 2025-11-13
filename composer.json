@@ -1,0 +1,37 @@
+{
+  "name": "equidna/caronte-client",
+  "description": "Caronte authentication client",
+  "version": "1.3.3",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gabriel Ruelas",
+      "email": "gruelas@gruelas.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "equidna/toolkit": "^0.6.3",
+    "lcobucci/jwt": "^5.3",
+    "lcobucci/clock": "^3.2",
+    "illuminate/support": "^10.0 || ^11.0 || ^12.0",
+    "laravel/framework": "^10.0 || ^11.0 || ^12.0",
+    "laravel/prompts": "^0.3.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Equidna\\Caronte\\": "src/"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": []
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Equidna\\Caronte\\Providers\\CaronteServiceProvider"
+      ]
+    }
+  }
+}
