@@ -20,6 +20,7 @@ use Equidna\Toolkit\Exceptions\ConflictException;
 use Equidna\Caronte\Commands\AttachedRoles;
 use Equidna\Caronte\Commands\CrudRoles\CreateRole;
 use Equidna\Caronte\Commands\CrudRoles\DeleteRole;
+use Equidna\Caronte\Commands\CrudRoles\ShowRoles;
 use Equidna\Caronte\Commands\CrudRoles\UpdateRole;
 use Equidna\Caronte\Commands\ManagementRoles;
 use GuzzleHttp\Promise\Create;
@@ -113,6 +114,7 @@ class CaronteServiceProvider extends ServiceProvider
                 CreateRole::class,
                 UpdateRole::class,
                 DeleteRole::class,
+                ShowRoles::class,
             ]);
         }
     }

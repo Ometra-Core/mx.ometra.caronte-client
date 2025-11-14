@@ -4,6 +4,12 @@ namespace Equidna\Caronte\Commands;
 
 use Equidna\Caronte\Commands\SuperCommand;
 use Equidna\Caronte\AppBoundRequest;
+use Equidna\Caronte\AppBound;
+use Illuminate\Support\Str;
+
+use function Laravel\Prompts\search;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\confirm;
 
 class AttachedRoles extends SuperCommand
 {
@@ -12,20 +18,13 @@ class AttachedRoles extends SuperCommand
 
     public function executeCommand()
     {
-        $searchUSer = $this->ask('¿Qué usuario estás buscando? (Escribe el nombre o email)');
-
-        if (empty($searchUSer)) {
-            $this->info('No se ingresó ningún término.');
-            return 1;
-        }
-
-        $response = AppBoundRequest::showUsers(paramSearch: $searchUSer);
+        $response = AppBoundRequest::showUsers(paramSearch: '');
         $response = $response->getData(true);
         $users = $response['data'] ?? [];
         $users = json_decode($users, true);
 
         if (empty($users)) {
-            $this->error("No se encontraron usuarios con el término: '{$searchUSer}'");
+            $this->error("No se encontraron usuarios'");
             return 1;
         }
 
@@ -38,15 +37,21 @@ class AttachedRoles extends SuperCommand
             $lookupMap[$key] = $user['uri_user'];
         }
 
-        $selectedOption = $this->choice(
-            'Se encontraron los siguientes usuarios. ¿Cuál quieres seleccionar?',
-            $options
+        $selectedOption = search(
+            label: '¿Qué usuario estás buscando? (Escribe el nombre o email)',
+            options: fn(string $value) => strlen($value) > 0
+                ? collect($options)
+                ->filter(fn($option) => Str::contains($option, $value, ignoreCase: true))
+                ->values()
+                ->all()
+                : []
         );
-
         // Usamos el mapa para obtener el ID real
         $selectedUserId = $lookupMap[$selectedOption];
+        //estableer un array asociativo con el nombre del usuario seleccionado
+        $userSelect = collect($users)->firstWhere('uri_user', $selectedUserId);
 
-        $response = AppBoundRequest::showRoles();
+        $response = AppBound::showRoles();
         $response = $response->getData(true);
         $roles = $response['data'] ?? [];
         $roles = json_decode($roles, true);
@@ -56,24 +61,35 @@ class AttachedRoles extends SuperCommand
         }
 
         $choices = [];
+        $choicesValues = [];
         foreach ($roles as $rol) {
             $label = "{$rol['name']} - {$rol['description']}";
             $choices[$label] = $rol['uri_applicationRole'];
+            $choicesValues[] = $label;
         }
 
-        $selectedLabel = $this->choice("Selecciona el rol que quieres enlazar:", array_keys($choices));
+        $selectedLabel = search(
+            label: 'Escribe el rol que quieres enlazar',
+            options: fn(string $value) => strlen($value) > 0
+                ? collect($choicesValues)
+                ->filter(fn($choiceValue) => Str::contains($choiceValue, $value, ignoreCase: true))
+                ->values()
+                ->all()
+                : []
+        );
+
         $selectedUri = $choices[$selectedLabel];
         $selectedRol = collect($roles)->firstWhere('uri_applicationRole', $selectedUri);
         $uriRol = $selectedRol['uri_applicationRole'] ?? null;
 
         if (!$selectedRol) {
-            $this->error("Acción no encontrada.");
+            $this->error("Rol no encontrado.");
             return 1;
         }
 
         $this->info("Has seleccionado: {$selectedRol['name']}");
 
-        if ($this->confirm("Seguro que deseas asignar el rol: {$selectedRol['name']} al usuario: {$selectedUserId}?")) {
+        if (confirm("Seguro que deseas asignar el rol <<{$selectedRol['name']}>> al usuario: {$userSelect['name']}?")) {
             $response = AppBoundRequest::assignRoleToUser(
                 uriUser: $selectedUserId,
                 uriApplicationRole: $uriRol
