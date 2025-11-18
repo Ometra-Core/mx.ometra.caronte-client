@@ -191,4 +191,23 @@ class AppBound
             forward_url: null
         );
     }
+
+    public static function initializeSettings()
+    {
+        dd("si me ejecuto");
+        AppBound::synchronizeRoles();
+        $response = AppBoundRequest::showRoles();
+        $response = $response->getData(true);
+        $roles = $response['data'] ?? [];
+        $roles = json_decode($roles, true);
+        if (empty($roles)) {
+            AppBound::saveSetting('roles', []);
+        } else {
+            $mappedRoles = [];
+            foreach ($roles as $role) {
+                $mappedRoles[$role['uri_applicationRole']] = $role;
+            }
+            AppBound::saveSetting('roles', $mappedRoles);
+        }
+    }
 }

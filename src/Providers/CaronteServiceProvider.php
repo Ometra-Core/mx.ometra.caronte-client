@@ -36,6 +36,10 @@ class CaronteServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom(__DIR__ . '/../config/caronte.php', 'caronte');
         $this->mergeConfigFrom(__DIR__ . '/../config/caronte-roles.php', 'caronte-roles');
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/caronte-jobs.php',
+            'caronte-jobs'
+        );
     }
 
     public function boot(Router $router)
@@ -71,6 +75,11 @@ class CaronteServiceProvider extends ServiceProvider
                 'caronte',
             ]
         );
+
+        //Jobs
+        $this->publishes([
+            __DIR__ . '/../config/caronte-jobs.php' => config_path('caronte-jobs.php'),
+        ], 'caronte-jobs');
 
         //Views
         $this->publishes(

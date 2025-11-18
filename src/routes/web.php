@@ -35,4 +35,6 @@ Route::middleware([DisableDebugbar::class])->group(function () {
         ->middleware([ExcludeFromHistory::class,]);
 
     Route::post('set-metadata', [CaronteController::class, 'setMetadata'])->name('caronte.set-metadata');
+    //webhook endpoint
+    Route::post('/synchronize', [CaronteController::class, 'synchronizeData']);
 });

@@ -14,8 +14,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Equidna\Caronte\CaronteRequest;
 use Equidna\Caronte\Facades\Caronte;
+use Equidna\Caronte\Jobs\SynchronizeRoles;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Inertia\Response as InertiaResponse;
+use Nette\Utils\Json;
 
 class CaronteController extends Controller
 {
@@ -137,5 +140,11 @@ class CaronteController extends Controller
     public function setMetadata(Request $request): Response|RedirectResponse
     {
         return CaronteRequest::setMetadata(request: $request);
+    }
+
+    public function synchronizeData(Request $request): JsonResponse
+    {
+        SynchronizeRoles::dispatch();
+        return response()->json(['success' => true]);
     }
 }

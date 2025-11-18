@@ -46,9 +46,7 @@ class AttachedRoles extends SuperCommand
                 ->all()
                 : []
         );
-        // Usamos el mapa para obtener el ID real
         $selectedUserId = $lookupMap[$selectedOption];
-        //estableer un array asociativo con el nombre del usuario seleccionado
         $userSelect = collect($users)->firstWhere('uri_user', $selectedUserId);
 
         $response = AppBound::showRoles();
