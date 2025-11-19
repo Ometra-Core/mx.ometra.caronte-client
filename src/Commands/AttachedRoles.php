@@ -8,7 +8,6 @@ use Equidna\Caronte\AppBound;
 use Illuminate\Support\Str;
 
 use function Laravel\Prompts\search;
-use function Laravel\Prompts\select;
 use function Laravel\Prompts\confirm;
 
 class AttachedRoles extends SuperCommand

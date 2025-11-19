@@ -62,6 +62,13 @@ class CaronteServiceProvider extends ServiceProvider
             }
         );
 
+        // Registers the API Routes for the package
+        Route::prefix('api/' . config('caronte.ROUTES_PREFIX'))->middleware(['api'])->group(
+            function () {
+                $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+            }
+        );
+
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'caronte');
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
 

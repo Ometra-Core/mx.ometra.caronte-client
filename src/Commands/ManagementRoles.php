@@ -4,8 +4,10 @@ namespace Equidna\Caronte\Commands;
 
 use Equidna\Caronte\AppBound;
 use Equidna\Caronte\Commands\SuperCommand;
+use Illuminate\Support\Str;
 
 use function Laravel\Prompts\select;
+use function Laravel\Prompts\search;
 
 class ManagementRoles extends SuperCommand
 {
@@ -38,7 +40,7 @@ class ManagementRoles extends SuperCommand
                     break;
                 case '1':
                     do {
-                        $this->initializeSettings();
+                        AppBound::initializeSettings();
                         $response = AppBound::showRoles();
                         $response = $response->getData(true);
                         $roles = $response['data'] ?? [];
@@ -49,15 +51,24 @@ class ManagementRoles extends SuperCommand
                         }
 
                         $choices = [];
+                        $choicesValues = [];
                         foreach ($roles as $rol) {
                             $label = "{$rol['name']} - {$rol['description']}";
                             $choices[$label] = $rol['uri_applicationRole'];
+                            $choicesValues[] = $label;
                         }
 
-                        $selectedLabel = select(
-                            label: "Selecciona el rol que quieres gestionar:",
-                            options: array_keys($choices)
+
+                        $selectedLabel = search(
+                            label: 'Escribe el rol que quieres gestionar',
+                            options: fn(string $value) => strlen($value) > 0
+                                ? collect($choicesValues)
+                                ->filter(fn($choiceValue) => Str::contains($choiceValue, $value, ignoreCase: true))
+                                ->values()
+                                ->all()
+                                : []
                         );
+
                         $selectedUri = $choices[$selectedLabel];
                         $selectedRol = collect($roles)->firstWhere('uri_applicationRole', $selectedUri);
                         $uriRol = $selectedRol['uri_applicationRole'] ?? null;

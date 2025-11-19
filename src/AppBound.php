@@ -194,7 +194,6 @@ class AppBound
 
     public static function initializeSettings()
     {
-        dd("si me ejecuto");
         AppBound::synchronizeRoles();
         $response = AppBoundRequest::showRoles();
         $response = $response->getData(true);
