@@ -21,7 +21,7 @@ class AppBoundRequest
         //ONLY STATIC METHODS ALLOWED
     }
 
-    public static function showRoles(): JsonResponse|RedirectResponse
+    public static function showRoles(): JsonResponse|RedirectResponse|string
     {
         try {
             $caronte_response = HTTP::withHeaders(
@@ -250,7 +250,102 @@ class AppBoundRequest
             }
 
             $response = $caronte_response->body();
-            dd($response);
+        } catch (RequestException | Exception $e) {
+            throw new BadRequestException(
+                message: $e->getMessage(),
+                previous: $e
+            );
+        }
+
+        return ResponseHelper::success(
+            message: 'ok',
+            data: $response ?? '',
+            forward_url: null
+        );
+    }
+
+    public static function updateUser(string $uri_user, string $name): JsonResponse|RedirectResponse
+    {
+        try {
+            $caronte_response = HTTP::withHeaders(
+                [
+                    'Authorization' => "Token " . AppBound::getToken(),
+                    'Accept' => 'application/json',
+                ]
+            )->put(
+                config('caronte.URL') . 'api/app/users/' . $uri_user,
+                [
+                    'name' => $name
+                ]
+            );
+
+            if ($caronte_response->failed()) {
+                throw new RequestException($caronte_response);
+            }
+
+            $response = $caronte_response->body();
+        } catch (RequestException | Exception $e) {
+            throw new BadRequestException(
+                message: $e->getMessage(),
+                previous: $e
+            );
+        }
+
+        return ResponseHelper::success(
+            message: 'ok',
+            data: $response ?? '',
+            forward_url: null
+        );
+    }
+
+    public static function deleteUser(string $uri_user): JsonResponse|RedirectResponse
+    {
+        try {
+            $caronte_response = HTTP::withHeaders(
+                [
+                    'Authorization' => "Token " . AppBound::getToken(),
+                    'Accept' => 'application/json',
+                ]
+            )->delete(
+                config('caronte.URL') . 'api/app/users/' . $uri_user
+            );
+
+            if ($caronte_response->failed()) {
+                throw new RequestException($caronte_response);
+            }
+
+            $response = $caronte_response->body();
+        } catch (RequestException | Exception $e) {
+            throw new BadRequestException(
+                message: $e->getMessage(),
+                previous: $e
+            );
+        }
+
+        return ResponseHelper::success(
+            message: 'ok',
+            data: $response ?? '',
+            forward_url: null
+        );
+    }
+
+    public static function showRolesUser(string $uri_user): JsonResponse|RedirectResponse
+    {
+        try {
+            $caronte_response = HTTP::withHeaders(
+                [
+                    'Authorization' => "Token " . AppBound::getToken(),
+                    'Accept' => 'application/json',
+                ]
+            )->get(
+                config('caronte.URL') . 'api/app/users/' . $uri_user. '/roles'
+            );
+
+            if ($caronte_response->failed()) {
+                throw new RequestException($caronte_response);
+            }
+
+            $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
             throw new BadRequestException(
                 message: $e->getMessage(),

@@ -151,11 +151,20 @@ class AppBound
         );
     }
 
-    public static function synchronizeRoles(): JsonResponse|RedirectResponse
+    public static function synchronizeRoles(): JsonResponse|RedirectResponse|string
     {
         $newRoles = AppBound::getSetting('newRoles');
         $editRoles = AppBound::getSetting('editRoles');
         $deleteRoles = AppBound::getSetting('deleteRoles');
+
+        //return null if there is nothing to synchronize
+        if (empty($newRoles) && empty($editRoles) && empty($deleteRoles)) {
+            return ResponseHelper::success(
+            message: 'ok',
+            data: null,
+            forward_url: null
+            );
+        }
 
         //save roles
         foreach ($newRoles as $roleNew) {

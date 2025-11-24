@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\search;
-use function Laravel\Prompts\pause;
+use function Laravel\Prompts\info;
 
 class ManagementUsers extends Command
 {
@@ -22,13 +22,13 @@ class ManagementUsers extends Command
         $mainOptions = [
             '0' => 'Crear nuevo usuario',
             '1' => 'Gestionar un usuario existente',
-            '2' => 'Mostrar a los usarios y sus roles en la aplicación',
-            '3' => 'Salir',
+            '2' => 'Salir',
         ];
         $optionsRoles = [
             '0' => 'Editar usuario',
             '1' => 'Eliminar usuario',
-            '2' => 'Salir',
+            '2' => 'Mostrar roles en la aplicación',
+            '3' => 'Salir',
         ];
         do {
             $selectedOption = select(
@@ -42,7 +42,7 @@ class ManagementUsers extends Command
                     break;
                 case '1':
                     do {
-                        pause('A continuación se mostrará la lista de usuarios que puedes gestionar. Pulsa Enter para continuar...');
+                        info('A continuación se mostrará la lista de usuarios que puedes gestionar...');
 
                         $response = AppBoundRequest::showUsers(paramSearch: '');
                         $response = $response->getData(true);
@@ -50,27 +50,14 @@ class ManagementUsers extends Command
                         $users = json_decode($users, true);
 
                         if (empty($users)) {
-                            $this->error("No se encontraron usuarios'");
+                            $this->error("No se encontraron usuarios que gestionar en esta aplicación'");
                             return 1;
                         }
-                        $usersApp = [];
-                        $usersApp = collect($users)->map(function ($user) {
-                            dd($user);
-                            if ($user['app_id'] === AppBound::getAppId()) {
-                                return $user;
-                            }
-                        })->toArray();
-                        dd($usersApp);
-
-                        if (empty($usersApp)) {
-                            $this->error("No hay usuarios en esta aplicación.");
-                            return 1;
-                        }
-
+                       
                         $options = [];
                         $lookupMap = [];
 
-                        foreach ($usersApp as $user) {
+                        foreach ($users as $user) {
                             $key = "{$user['name']} - (uri_user: {$user['uri_user']})";
                             $options[] = $key;
                             $lookupMap[$key] = $user['uri_user'];
@@ -88,8 +75,6 @@ class ManagementUsers extends Command
                         $selectedUserId = $lookupMap[$selectedOption];
                         $userSelect = collect($users)->firstWhere('uri_user', $selectedUserId);
 
-
-
                         $selectedOptionRoles = select(
                             label: 'Selecciona una opción:',
                             options: array_values($optionsRoles)
@@ -97,12 +82,15 @@ class ManagementUsers extends Command
                         $optionRole = array_search($selectedOptionRoles, $optionsRoles);
                         switch ($optionRole) {
                             case '0':
-                                $this->call('caronte-client:edit-role', ['uri_rol' => $uriRol]);
+                                $this->call('caronte-client:update-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
                                 break;
                             case '1':
-                                $this->call('caronte-client:delete-role', ['uri_rol' => $uriRol]);
+                                $this->call('caronte-client:delete-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
                                 break;
                             case '2':
+                                $this->call('caronte-client:users-roles', ['uri_user' => $selectedUserId]);
+                                break;
+                            case '3':
                                 $this->info('Regresando al menú principal...');
                                 break 2;
                             default:
@@ -112,12 +100,9 @@ class ManagementUsers extends Command
                     } while (true);
                     break;
                 case '2':
-                    $this->call('caronte-client:attached-roles');
+                    $this->call('caronte-client:users-roles');
                     break;
                 case '3':
-                    $this->call('caronte-client:show-roles');
-                    break;
-                case '4':
                     $this->info('Saliendo del gestor de roles...');
                     return 0;
                 default:
