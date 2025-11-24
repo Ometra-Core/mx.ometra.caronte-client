@@ -226,4 +226,42 @@ class AppBoundRequest
             forward_url: null
         );
     }
+
+    //USERS MANAGEMENT METHODS
+    public static function createUser(string $name, string $email, string $password): JsonResponse|RedirectResponse
+    {
+        try {
+            $caronte_response = HTTP::withHeaders(
+                [
+                    'Authorization' => "Token " . AppBound::getToken(),
+                    'Accept' => 'application/json',
+                ]
+            )->post(
+                config('caronte.URL') . 'api/app/users/',
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => $password,
+                ]
+            );
+
+            if ($caronte_response->failed()) {
+                throw new RequestException($caronte_response);
+            }
+
+            $response = $caronte_response->body();
+            dd($response);
+        } catch (RequestException | Exception $e) {
+            throw new BadRequestException(
+                message: $e->getMessage(),
+                previous: $e
+            );
+        }
+
+        return ResponseHelper::success(
+            message: 'ok',
+            data: $response ?? '',
+            forward_url: null
+        );
+    }
 }

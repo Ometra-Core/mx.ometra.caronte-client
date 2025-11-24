@@ -19,10 +19,12 @@ use Equidna\Caronte\Console\Commands\NotifyClientConfigurationCommand;
 use Equidna\Toolkit\Exceptions\ConflictException;
 use Equidna\Caronte\Commands\AttachedRoles;
 use Equidna\Caronte\Commands\CrudRoles\CreateRole;
+use Equidna\Caronte\Commands\CrudUsers\CreateUser;
 use Equidna\Caronte\Commands\CrudRoles\DeleteRole;
 use Equidna\Caronte\Commands\CrudRoles\ShowRoles;
 use Equidna\Caronte\Commands\CrudRoles\UpdateRole;
 use Equidna\Caronte\Commands\ManagementRoles;
+use Equidna\Caronte\Commands\ManagementUsers;
 use GuzzleHttp\Promise\Create;
 
 class CaronteServiceProvider extends ServiceProvider
@@ -127,10 +129,12 @@ class CaronteServiceProvider extends ServiceProvider
                 NotifyClientConfigurationCommand::class,
                 AttachedRoles::class,
                 ManagementRoles::class,
+                ManagementUsers::class,
                 CreateRole::class,
                 UpdateRole::class,
                 DeleteRole::class,
                 ShowRoles::class,
+                CreateUser::class,
             ]);
         }
     }
