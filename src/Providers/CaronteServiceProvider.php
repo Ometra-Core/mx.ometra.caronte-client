@@ -23,7 +23,7 @@ use Equidna\Caronte\Commands\CrudUsers\CreateUser;
 use Equidna\Caronte\Commands\CrudRoles\DeleteRole;
 use Equidna\Caronte\Commands\CrudRoles\ShowRoles;
 use Equidna\Caronte\Commands\CrudRoles\UpdateRole;
-use Equidna\Caronte\Commands\CrudUsers\DeleteUser;
+use Equidna\Caronte\Commands\CrudUsers\DeleteRolesUser;
 use Equidna\Caronte\Commands\CrudUsers\UpdateUser;
 use Equidna\Caronte\Commands\CrudUsers\ShowRolesByUser;
 use Equidna\Caronte\Commands\ManagementRoles;
@@ -138,7 +138,7 @@ class CaronteServiceProvider extends ServiceProvider
                 DeleteRole::class,
                 ShowRoles::class,
                 CreateUser::class,
-                DeleteUser::class,
+                DeleteRolesUser::class,
                 UpdateUser::class,
                 ShowRolesByUser::class,
             ]);

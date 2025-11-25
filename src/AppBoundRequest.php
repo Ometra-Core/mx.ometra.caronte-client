@@ -52,7 +52,7 @@ class AppBoundRequest
         );
     }
 
-    public static function showUsers(string $paramSearch): JsonResponse|RedirectResponse
+    public static function showUsers(string $paramSearch, bool $usersApp = false): JsonResponse|RedirectResponse
     {
         try {
             $caronte_response = HTTP::withHeaders(
@@ -64,6 +64,7 @@ class AppBoundRequest
                 config('caronte.URL') . 'api/app/users/',
                 [
                     'search' => $paramSearch,
+                    'app_users' => $usersApp ? 'true' : 'false',
                 ]
             );
 
@@ -250,6 +251,7 @@ class AppBoundRequest
             }
 
             $response = $caronte_response->body();
+            dd($response);
         } catch (RequestException | Exception $e) {
             throw new BadRequestException(
                 message: $e->getMessage(),
@@ -298,7 +300,7 @@ class AppBoundRequest
         );
     }
 
-    public static function deleteUser(string $uri_user): JsonResponse|RedirectResponse
+    public static function deleteRoleUser(string $uri_user, string $uri_applicationRole): JsonResponse|RedirectResponse
     {
         try {
             $caronte_response = HTTP::withHeaders(
@@ -307,7 +309,7 @@ class AppBoundRequest
                     'Accept' => 'application/json',
                 ]
             )->delete(
-                config('caronte.URL') . 'api/app/users/' . $uri_user
+                config('caronte.URL') . 'api/app/users/roles' . $uri_applicationRole . '/' . $uri_user
             );
 
             if ($caronte_response->failed()) {
@@ -338,7 +340,7 @@ class AppBoundRequest
                     'Accept' => 'application/json',
                 ]
             )->get(
-                config('caronte.URL') . 'api/app/users/' . $uri_user. '/roles'
+                config('caronte.URL') . 'api/app/users/' . $uri_user . '/roles',
             );
 
             if ($caronte_response->failed()) {

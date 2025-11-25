@@ -23,7 +23,7 @@ class AttachedRoles extends SuperCommand
         $users = json_decode($users, true);
 
         if (empty($users)) {
-            $this->error("No se encontraron usuarios'");
+            $this->error("No se encontraron usuarios");
             return 1;
         }
 

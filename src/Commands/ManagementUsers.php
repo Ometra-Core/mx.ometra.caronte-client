@@ -6,11 +6,11 @@ use Equidna\Caronte\AppBound;
 use Equidna\Caronte\AppBoundRequest;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\search;
 use function Laravel\Prompts\info;
+use function Laravel\Prompts\warning;
 
 class ManagementUsers extends Command
 {
@@ -26,7 +26,7 @@ class ManagementUsers extends Command
         ];
         $optionsRoles = [
             '0' => 'Editar usuario',
-            '1' => 'Eliminar usuario',
+            '1' => 'Eliminar roles asociados al usuario',
             '2' => 'Mostrar roles en la aplicación',
             '3' => 'Salir',
         ];
@@ -41,68 +41,63 @@ class ManagementUsers extends Command
                     $this->call('caronte-client:create-user');
                     break;
                 case '1':
-                    do {
-                        info('A continuación se mostrará la lista de usuarios que puedes gestionar...');
+                    info('A continuación se mostrará la lista de usuarios que puedes gestionar...');
 
-                        $response = AppBoundRequest::showUsers(paramSearch: '');
-                        $response = $response->getData(true);
-                        $users = $response['data'] ?? [];
-                        $users = json_decode($users, true);
+                    $response = AppBoundRequest::showUsers(paramSearch: '', usersApp: true);
+                    $response = $response->getData(true);
+                    $users = $response['data'] ?? [];
+                    $users = json_decode($users, true);
 
-                        if (empty($users)) {
-                            $this->error("No se encontraron usuarios que gestionar en esta aplicación'");
-                            return 1;
-                        }
-                       
-                        $options = [];
-                        $lookupMap = [];
+                    if (empty($users)) {
+                        warning("No se encontraron usuarios que gestionar en esta aplicación");
+                        break;
+                    }
 
-                        foreach ($users as $user) {
-                            $key = "{$user['name']} - (uri_user: {$user['uri_user']})";
-                            $options[] = $key;
-                            $lookupMap[$key] = $user['uri_user'];
-                        }
+                    $options = [];
+                    $lookupMap = [];
 
-                        $selectedOption = search(
-                            label: '¿Qué usuario estás buscando? (Escribe el nombre o email)',
-                            options: fn(string $value) => strlen($value) > 0
-                                ? collect($options)
-                                ->filter(fn($option) => Str::contains($option, $value, ignoreCase: true))
-                                ->values()
-                                ->all()
-                                : []
-                        );
-                        $selectedUserId = $lookupMap[$selectedOption];
-                        $userSelect = collect($users)->firstWhere('uri_user', $selectedUserId);
+                    foreach ($users as $user) {
+                        $key = "{$user['name']} - (uri_user: {$user['uri_user']})";
+                        $options[] = $key;
+                        $lookupMap[$key] = $user['uri_user'];
+                    }
 
-                        $selectedOptionRoles = select(
-                            label: 'Selecciona una opción:',
-                            options: array_values($optionsRoles)
-                        );
-                        $optionRole = array_search($selectedOptionRoles, $optionsRoles);
-                        switch ($optionRole) {
-                            case '0':
-                                $this->call('caronte-client:update-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
-                                break;
-                            case '1':
-                                $this->call('caronte-client:delete-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
-                                break;
-                            case '2':
-                                $this->call('caronte-client:users-roles', ['uri_user' => $selectedUserId]);
-                                break;
-                            case '3':
-                                $this->info('Regresando al menú principal...');
-                                break 2;
-                            default:
-                                $this->error('Opción no válida. Por favor, intenta de nuevo.');
-                                break;
-                        }
-                    } while (true);
+                    $selectedOption = search(
+                        label: '¿Qué usuario estás buscando? (Escribe el nombre o email)',
+                        options: fn(string $value) => strlen($value) > 0
+                            ? collect($options)
+                            ->filter(fn($option) => Str::contains($option, $value, ignoreCase: true))
+                            ->values()
+                            ->all()
+                            : []
+                    );
+                    $selectedUserId = $lookupMap[$selectedOption];
+                    $userSelect = collect($users)->firstWhere('uri_user', $selectedUserId);
+
+                    $selectedOptionRoles = select(
+                        label: 'Selecciona una opción:',
+                        options: array_values($optionsRoles)
+                    );
+                    $optionRole = array_search($selectedOptionRoles, $optionsRoles);
+                    switch ($optionRole) {
+                        case '0':
+                            $this->call('caronte-client:update-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
+                            break;
+                        case '1':
+                            $this->call('caronte-client:delete-roles-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
+                            break;
+                        case '2':
+                            $this->call('caronte-client:users-roles', ['uri_user' => $selectedUserId]);
+                            break;
+                        case '3':
+                            $this->info('Regresando al menú principal...');
+                            break 2;
+                        default:
+                            $this->error('Opción no válida. Por favor, intenta de nuevo.');
+                            break;
+                    }
                     break;
                 case '2':
-                    $this->call('caronte-client:users-roles');
-                    break;
-                case '3':
                     $this->info('Saliendo del gestor de roles...');
                     return 0;
                 default:
