@@ -22,7 +22,8 @@ class ManagementUsers extends Command
         $mainOptions = [
             '0' => 'Crear nuevo usuario',
             '1' => 'Gestionar un usuario existente',
-            '2' => 'Salir',
+            '2' => 'Enlazar roles a usuarios',
+            '3' => 'Salir',
         ];
         $optionsRoles = [
             '0' => 'Editar usuario',
@@ -74,30 +75,35 @@ class ManagementUsers extends Command
                     $selectedUserId = $lookupMap[$selectedOption];
                     $userSelect = collect($users)->firstWhere('uri_user', $selectedUserId);
 
-                    $selectedOptionRoles = select(
-                        label: 'Selecciona una opción:',
-                        options: array_values($optionsRoles)
-                    );
-                    $optionRole = array_search($selectedOptionRoles, $optionsRoles);
-                    switch ($optionRole) {
-                        case '0':
-                            $this->call('caronte-client:update-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
-                            break;
-                        case '1':
-                            $this->call('caronte-client:delete-roles-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
-                            break;
-                        case '2':
-                            $this->call('caronte-client:users-roles', ['uri_user' => $selectedUserId]);
-                            break;
-                        case '3':
-                            $this->info('Regresando al menú principal...');
-                            break 2;
-                        default:
-                            $this->error('Opción no válida. Por favor, intenta de nuevo.');
-                            break;
-                    }
+                    do {
+                        $selectedOptionRoles = select(
+                            label: 'Selecciona una opción:',
+                            options: array_values($optionsRoles)
+                        );
+                        $optionRole = array_search($selectedOptionRoles, $optionsRoles);
+                        switch ($optionRole) {
+                            case '0':
+                                $this->call('caronte-client:update-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
+                                break;
+                            case '1':
+                                $this->call('caronte-client:delete-roles-user', ['uri_user' => $selectedUserId, 'name_user' => $userSelect['name']]);
+                                break;
+                            case '2':
+                                $this->call('caronte-client:users-roles', ['uri_user' => $selectedUserId]);
+                                break;
+                            case '3':
+                                $this->info('Regresando al menú principal...');
+                                break 2;
+                            default:
+                                $this->error('Opción no válida. Por favor, intenta de nuevo.');
+                                break;
+                        }
+                    } while (true);
                     break;
                 case '2':
+                    $this->call('caronte-client:attached-roles');
+                    break;
+                case '3':
                     $this->info('Saliendo del gestor de roles...');
                     return 0;
                 default:

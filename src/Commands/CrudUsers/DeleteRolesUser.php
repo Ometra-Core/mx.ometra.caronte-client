@@ -49,8 +49,6 @@ class DeleteRolesUser extends Command
                             return 1;
                         }
                     }
-
-                    $this->info("¡Listo! El rol '{$uri_applicationRole}' ha sido eliminado exitosamente.");
                 } else {
                     $this->info('Operación cancelada.');
                 }

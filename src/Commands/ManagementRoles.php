@@ -19,9 +19,8 @@ class ManagementRoles extends SuperCommand
         $mainOptions = [
             '0' => 'Crear nuevo rol',
             '1' => 'Gestionar un rol existente',
-            '2' => 'Enlzar roles a usuarios',
-            '3' => 'Ver roles existentes',
-            '4' => 'Salir',
+            '2' => 'Ver roles existentes',
+            '3' => 'Salir',
         ];
         $optionsRoles = [
             '0' => 'Editar rol',
@@ -103,12 +102,9 @@ class ManagementRoles extends SuperCommand
                     } while (true);
                     break;
                 case '2':
-                    $this->call('caronte-client:attached-roles');
-                    break;
-                case '3':
                     $this->call('caronte-client:show-roles');
                     break;
-                case '4':
+                case '3':
                     $this->info('Saliendo del gestor de roles...');
                     return 0;
                 default:

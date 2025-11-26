@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\password;
+use function Laravel\Prompts\info;
 
 class CreateUser extends Command
 {
@@ -25,11 +26,23 @@ class CreateUser extends Command
             required: true,
             validate: ['email' => 'email']
         );
-        $password = password(
-            label: 'Escribe la contraseña: ',
-            required: true
-        );
-        $response = AppBoundRequest::createUser(name: $name, email: $email, password: $password);
+        $password = '';
+        $password_confirmaiton = '';
+        do {
+            $password = password(
+                label: 'Escribe la contraseña: ',
+                required: true
+            );
+            $password_confirmaiton = password(
+                label: 'Confirma la contraseña: ',
+                required: true
+            );
+            if ($password != $password_confirmaiton) {
+                info('las contraseñas no coinciden');
+            }
+        } while ($password != $password_confirmaiton);
+
+        $response = AppBoundRequest::createUser(name: $name, email: $email, password: $password, password_confirmation: $password_confirmaiton);
         if ($response->getStatusCode() !== 200) {
             $this->error("Error al crear el usuario: " . $response->getContent());
             return 1;

@@ -21,6 +21,7 @@ class AppBoundRequest
         //ONLY STATIC METHODS ALLOWED
     }
 
+    //ROLES MANAGEMENT METHODS
     public static function showRoles(): JsonResponse|RedirectResponse|string
     {
         try {
@@ -229,7 +230,7 @@ class AppBoundRequest
     }
 
     //USERS MANAGEMENT METHODS
-    public static function createUser(string $name, string $email, string $password): JsonResponse|RedirectResponse
+    public static function createUser(string $name, string $email, string $password, string $password_confirmation): JsonResponse|RedirectResponse
     {
         try {
             $caronte_response = HTTP::withHeaders(
@@ -238,11 +239,12 @@ class AppBoundRequest
                     'Accept' => 'application/json',
                 ]
             )->post(
-                config('caronte.URL') . 'api/app/users/',
+                config('caronte.URL') . 'api/app/users',
                 [
                     'name' => $name,
                     'email' => $email,
                     'password' => $password,
+                    'password_confirmation' => $password_confirmation,
                 ]
             );
 
@@ -251,7 +253,6 @@ class AppBoundRequest
             }
 
             $response = $caronte_response->body();
-            dd($response);
         } catch (RequestException | Exception $e) {
             throw new BadRequestException(
                 message: $e->getMessage(),
@@ -309,13 +310,12 @@ class AppBoundRequest
                     'Accept' => 'application/json',
                 ]
             )->delete(
-                config('caronte.URL') . 'api/app/users/roles' . $uri_applicationRole . '/' . $uri_user
+                config('caronte.URL') . 'api/app/users/roles/' . $uri_applicationRole . '/' . $uri_user
             );
 
             if ($caronte_response->failed()) {
                 throw new RequestException($caronte_response);
             }
-
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
             throw new BadRequestException(
