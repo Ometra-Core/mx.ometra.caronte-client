@@ -1,6 +1,6 @@
 <?php
 
-namespace Equidna\Caronte;
+namespace Ometra\Caronte;
 
 use Equidna\Toolkit\Exceptions\UnauthorizedException;
 use Equidna\Toolkit\Helpers\ResponseHelper;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Equidna\Caronte\Commands;
+namespace Ometra\Caronte\Commands;
 
 use Illuminate\Console\Command;
 use Equidna\Caronte\AppBound;

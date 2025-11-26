@@ -8,7 +8,7 @@
  * @version 1.3.2
  */
 
-namespace Equidna\Caronte\Console\Commands;
+namespace Ometra\Caronte\Console\Commands;
 
 use Illuminate\Console\Command;
 use Equidna\Caronte\CaronteRequest;

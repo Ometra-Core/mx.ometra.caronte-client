@@ -1,6 +1,6 @@
 <?php
 
-namespace Equidna\Caronte\Jobs;
+namespace Ometra\Caronte\Jobs;
 
 use Equidna\Caronte\AppBound;
 use Illuminate\Contracts\Queue\ShouldQueue;

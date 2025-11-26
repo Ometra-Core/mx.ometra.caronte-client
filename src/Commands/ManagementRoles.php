@@ -1,6 +1,6 @@
 <?php
 
-namespace Equidna\Caronte\Commands;
+namespace Ometra\Caronte\Commands;
 
 use Equidna\Caronte\AppBound;
 use Equidna\Caronte\Commands\SuperCommand;

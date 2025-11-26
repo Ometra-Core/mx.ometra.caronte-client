@@ -1,6 +1,6 @@
 <?php
 
-namespace Equidna\Caronte\Commands\CrudRoles;
+namespace Ometra\Caronte\Commands\CrudRoles;
 
 use Equidna\Caronte\AppBound;
 use Equidna\Caronte\Commands\SuperCommand;

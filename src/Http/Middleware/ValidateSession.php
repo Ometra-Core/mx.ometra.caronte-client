@@ -7,7 +7,7 @@
  *
  */
 
-namespace Equidna\Caronte\Http\Middleware;
+namespace Ometra\Caronte\Http\Middleware;
 
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;

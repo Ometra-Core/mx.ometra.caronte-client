@@ -6,7 +6,7 @@
  * @version 1.3.2
  */
 
-namespace Equidna\Caronte\Models;
+namespace Ometra\Caronte\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;

@@ -6,7 +6,7 @@
  * @version 1.3.2
  */
 
-namespace Equidna\Caronte\Http\Controllers;
+namespace Ometra\Caronte\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

@@ -6,7 +6,7 @@
  * @version 1.3.2
  */
 
-namespace Equidna\Caronte\Facades;
+namespace Ometra\Caronte\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use Equidna\Caronte\Caronte as CaronteClass;

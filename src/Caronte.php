@@ -6,7 +6,7 @@
  * @version 1.3.2
  */
 
-namespace Equidna\Caronte;
+namespace Ometra\Caronte;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;

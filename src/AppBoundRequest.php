@@ -1,6 +1,6 @@
 <?php
 
-namespace Equidna\Caronte;
+namespace Ometra\Caronte;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

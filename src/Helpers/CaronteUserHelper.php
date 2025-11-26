@@ -7,7 +7,7 @@
  *
  */
 
-namespace Equidna\Caronte\Helpers;
+namespace Ometra\Caronte\Helpers;
 
 use Equidna\Caronte\Models\CaronteUser;
 use Equidna\Caronte\Models\CaronteUserMetadata;

@@ -8,7 +8,7 @@
  *
  */
 
-namespace Equidna\Caronte\Providers;
+namespace Ometra\Caronte\Providers;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Routing\Router;

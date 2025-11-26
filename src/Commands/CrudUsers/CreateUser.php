@@ -1,6 +1,6 @@
 <?php
 
-namespace Equidna\Caronte\Commands\CrudUsers;
+namespace Ometra\Caronte\Commands\CrudUsers;
 
 use Equidna\Caronte\AppBound;
 use Equidna\Caronte\AppBoundRequest;

@@ -7,7 +7,7 @@
  *
  */
 
-namespace Equidna\Caronte\Helpers;
+namespace Ometra\Caronte\Helpers;
 
 use Equidna\Caronte\Facades\Caronte;
 use Equidna\Toolkit\Exceptions\UnauthorizedException;
