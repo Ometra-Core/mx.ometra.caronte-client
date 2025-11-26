@@ -2,9 +2,9 @@
 
 namespace Ometra\Caronte\Commands;
 
-use Equidna\Caronte\Commands\SuperCommand;
-use Equidna\Caronte\AppBoundRequest;
-use Equidna\Caronte\AppBound;
+use Ometra\Caronte\Commands\SuperCommand;
+use Ometra\Caronte\AppBoundRequest;
+use Ometra\Caronte\AppBound;
 use Illuminate\Support\Str;
 
 use function Laravel\Prompts\search;

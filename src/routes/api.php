@@ -1,6 +1,6 @@
 <?php
 
-use Equidna\Caronte\Http\Controllers\CaronteController;
+use Ometra\Caronte\Http\Controllers\CaronteController;
 use Illuminate\Support\Facades\Route;
 
 //webhook endpoint

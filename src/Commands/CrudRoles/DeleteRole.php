@@ -2,8 +2,8 @@
 
 namespace Ometra\Caronte\Commands\CrudRoles;
 
-use Equidna\Caronte\AppBound;
-use Equidna\Caronte\Commands\SuperCommand;
+use Ometra\Caronte\AppBound;
+use Ometra\Caronte\Commands\SuperCommand;
 
 use function Laravel\Prompts\confirm;
 

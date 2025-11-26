@@ -2,7 +2,7 @@
 
 namespace Ometra\Caronte\Commands\CrudUsers;
 
-use Equidna\Caronte\AppBoundRequest;
+use Ometra\Caronte\AppBoundRequest;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\table;

@@ -3,7 +3,7 @@
 namespace Ometra\Caronte\Commands;
 
 use Illuminate\Console\Command;
-use Equidna\Caronte\AppBound;
+use Ometra\Caronte\AppBound;
 
 abstract class SuperCommand extends Command
 {

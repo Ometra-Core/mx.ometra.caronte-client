@@ -2,8 +2,8 @@
 
 namespace Ometra\Caronte\Commands\CrudUsers;
 
-use Equidna\Caronte\AppBound;
-use Equidna\Caronte\AppBoundRequest;
+use Ometra\Caronte\AppBound;
+use Ometra\Caronte\AppBoundRequest;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\text;

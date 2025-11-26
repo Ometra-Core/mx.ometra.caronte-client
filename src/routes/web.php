@@ -8,7 +8,7 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Equidna\Caronte\Http\Controllers\CaronteController;
+use Ometra\Caronte\Http\Controllers\CaronteController;
 use Equidna\Toolkit\Http\Middleware\ExcludeFromHistory;
 use Equidna\Toolkit\Http\Middleware\DisableDebugbar;
 
