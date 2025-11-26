@@ -11,7 +11,7 @@
 namespace Ometra\Caronte\Console\Commands;
 
 use Illuminate\Console\Command;
-use Equidna\Caronte\CaronteRequest;
+use Ometra\Caronte\CaronteRequest;
 use Exception;
 
 class NotifyClientConfigurationCommand extends Command

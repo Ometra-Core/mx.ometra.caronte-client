@@ -14,21 +14,21 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Equidna\Caronte\Caronte;
-use Equidna\Caronte\Console\Commands\NotifyClientConfigurationCommand;
+use Ometra\Caronte\Caronte;
+use Ometra\Caronte\Console\Commands\NotifyClientConfigurationCommand;
 use Equidna\Toolkit\Exceptions\ConflictException;
-use Equidna\Caronte\Commands\AttachedRoles;
-use Equidna\Caronte\Commands\CrudRoles\CreateRole;
-use Equidna\Caronte\Commands\CrudUsers\CreateUser;
-use Equidna\Caronte\Commands\CrudRoles\DeleteRole;
-use Equidna\Caronte\Commands\CrudRoles\ShowRoles;
-use Equidna\Caronte\Commands\CrudRoles\UpdateRole;
-use Equidna\Caronte\Commands\CrudUsers\DeleteRolesUser;
-use Equidna\Caronte\Commands\CrudUsers\UpdateUser;
-use Equidna\Caronte\Commands\CrudUsers\ShowRolesByUser;
-use Equidna\Caronte\Commands\ManagementCaronte;
-use Equidna\Caronte\Commands\ManagementRoles;
-use Equidna\Caronte\Commands\ManagementUsers;
+use Ometra\Caronte\Commands\AttachedRoles;
+use Ometra\Caronte\Commands\CrudRoles\CreateRole;
+use Ometra\Caronte\Commands\CrudUsers\CreateUser;
+use Ometra\Caronte\Commands\CrudRoles\DeleteRole;
+use Ometra\Caronte\Commands\CrudRoles\ShowRoles;
+use Ometra\Caronte\Commands\CrudRoles\UpdateRole;
+use Ometra\Caronte\Commands\CrudUsers\DeleteRolesUser;
+use Ometra\Caronte\Commands\CrudUsers\UpdateUser;
+use Ometra\Caronte\Commands\CrudUsers\ShowRolesByUser;
+use Ometra\Caronte\Commands\ManagementCaronte;
+use Ometra\Caronte\Commands\ManagementRoles;
+use Ometra\Caronte\Commands\ManagementUsers;
 use GuzzleHttp\Promise\Create;
 
 class CaronteServiceProvider extends ServiceProvider
@@ -54,12 +54,12 @@ class CaronteServiceProvider extends ServiceProvider
 
         //Registers the Caronte alias and facade.
         $loader = AliasLoader::getInstance();
-        $loader->alias('Caronte', \Equidna\Caronte\Facades\Caronte::class);
-        $loader->alias('PermissionHelper', \Equidna\Caronte\Helpers\PermissionHelper::class);
+        $loader->alias('Caronte', \Ometra\Caronte\Facades\Caronte::class);
+        $loader->alias('PermissionHelper', \Ometra\Caronte\Helpers\PermissionHelper::class);
 
         //Registers the middleware
-        $router->aliasMiddleware('Caronte.ValidateSession', \Equidna\Caronte\Http\Middleware\ValidateSession::class);
-        $router->aliasMiddleware('Caronte.ValidateRoles', \Equidna\Caronte\Http\Middleware\ValidateRoles::class);
+        $router->aliasMiddleware('Caronte.ValidateSession', \Ometra\Caronte\Http\Middleware\ValidateSession::class);
+        $router->aliasMiddleware('Caronte.ValidateRoles', \Ometra\Caronte\Http\Middleware\ValidateRoles::class);
 
         //Registers the base Routes for clients
         Route::prefix(config('caronte.ROUTES_PREFIX'))->middleware(['web'])->group(

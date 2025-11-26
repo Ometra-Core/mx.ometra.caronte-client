@@ -9,7 +9,7 @@
 namespace Ometra\Caronte\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Equidna\Caronte\Caronte as CaronteClass;
+use Ometra\Caronte\Caronte as CaronteClass;
 
 /**
  * Facade for the Caronte client, providing static access to authentication and user methods.
@@ -24,7 +24,7 @@ use Equidna\Caronte\Caronte as CaronteClass;
  * @method static string echo(string $message)
  * @method static void updateUserData(\stdClass|string $user)
  *
- * @see Equidna\Caronte\Caronte
+ * @see Ometra\Caronte\Caronte
  */
 class Caronte extends Facade
 {

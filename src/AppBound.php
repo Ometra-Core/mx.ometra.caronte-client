@@ -7,7 +7,7 @@ use Equidna\Toolkit\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Equidna\Caronte\AppBoundRequest;
+use Ometra\Caronte\AppBoundRequest;
 
 class AppBound
 {

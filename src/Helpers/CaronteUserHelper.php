@@ -9,8 +9,8 @@
 
 namespace Ometra\Caronte\Helpers;
 
-use Equidna\Caronte\Models\CaronteUser;
-use Equidna\Caronte\Models\CaronteUserMetadata;
+use Ometra\Caronte\Models\CaronteUser;
+use Ometra\Caronte\Models\CaronteUserMetadata;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CaronteUserHelper

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Contracts\View\View;
 use Equidna\Toolkit\Helpers\RouteHelper;
 use Equidna\Toolkit\Helpers\ResponseHelper;
-use Equidna\Caronte\Facades\Caronte;
+use Ometra\Caronte\Facades\Caronte;
 use Equidna\Toolkit\Exceptions\BadRequestException;
 use Equidna\Toolkit\Exceptions\UnauthorizedException;
 use Exception;

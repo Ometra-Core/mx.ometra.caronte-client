@@ -12,7 +12,7 @@ namespace Ometra\Caronte\Http\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Equidna\Toolkit\Helpers\ResponseHelper;
-use Equidna\Caronte\Helpers\PermissionHelper;
+use Ometra\Caronte\Helpers\PermissionHelper;
 use Equidna\Toolkit\Exceptions\UnauthorizedException;
 use Exception;
 use Closure;

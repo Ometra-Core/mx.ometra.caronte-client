@@ -11,8 +11,8 @@ namespace Ometra\Caronte\Http\Middleware;
 
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
-use Equidna\Caronte\Facades\Caronte;
-use Equidna\Caronte\Helpers\PermissionHelper;
+use Ometra\Caronte\Facades\Caronte;
+use Ometra\Caronte\Helpers\PermissionHelper;
 use Equidna\Toolkit\Helpers\ResponseHelper;
 use Equidna\Toolkit\Helpers\RouteHelper;
 use Equidna\Toolkit\Exceptions\UnauthorizedException;

@@ -9,7 +9,7 @@
 
 namespace Ometra\Caronte\Helpers;
 
-use Equidna\Caronte\Facades\Caronte;
+use Ometra\Caronte\Facades\Caronte;
 use Equidna\Toolkit\Exceptions\UnauthorizedException;
 
 class PermissionHelper

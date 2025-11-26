@@ -2,7 +2,7 @@
 
 namespace Ometra\Caronte\Jobs;
 
-use Equidna\Caronte\AppBound;
+use Ometra\Caronte\AppBound;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Exception;
