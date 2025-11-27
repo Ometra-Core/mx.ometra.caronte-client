@@ -18,7 +18,7 @@ class AttachedRoles extends SuperCommand
     public function executeCommand()
     {
         $response = AppBoundRequest::showUsers(paramSearch: '');
-        $users = json_decode($response, true);
+        $users = json_decode($response['data'], true);
 
         if (empty($users)) {
             $this->error("No se encontraron usuarios");

@@ -16,7 +16,7 @@ class ShowRolesByUser extends Command
     {
         $uri_user = $this->argument('uri_user');
         $response = AppBoundRequest::showRolesUser(uri_user: $uri_user);
-        $roles = json_decode($response, true);
+        $roles = json_decode($response['data'], true);
         if (empty($roles)) {
             $this->warn("No hay roles registrados.");
             return 0;

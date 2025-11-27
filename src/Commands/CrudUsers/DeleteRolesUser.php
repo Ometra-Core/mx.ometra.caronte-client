@@ -30,7 +30,7 @@ class DeleteRolesUser extends Command
         );
         $option = array_search($selectedOption, $mainOptions);
         $roles = AppBoundRequest::showRolesUser(uri_user: $uri_user);
-        $roles = json_decode($roles, true);
+        $roles = json_decode($roles['data'], true);
         if (empty($roles)) {
             $this->error("No se encontraron roles asociados al usuario");
             return 1;

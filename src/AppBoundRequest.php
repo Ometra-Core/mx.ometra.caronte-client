@@ -47,7 +47,7 @@ class AppBoundRequest
         return $response;
     }
 
-    public static function showUsers(string $paramSearch, bool $usersApp = false): string
+    public static function showUsers(string $paramSearch, bool $usersApp = false): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -72,8 +72,7 @@ class AppBoundRequest
                 previous: $e
             );
         }
-
-        return $response;
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
     public static function assignRoleToUser(string $uriUser, string $uriApplicationRole): array

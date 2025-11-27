@@ -45,7 +45,7 @@ class ManagementUsers extends Command
                     info('A continuación se mostrará la lista de usuarios que puedes gestionar...');
 
                     $response = AppBoundRequest::showUsers(paramSearch: '', usersApp: true);
-                    $users = json_decode($response, true);
+                    $users = json_decode($response['data'], true);
 
                     if (empty($users)) {
                         warning("No se encontraron usuarios que gestionar en esta aplicación");
