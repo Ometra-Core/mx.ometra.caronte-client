@@ -87,10 +87,10 @@ class AttachedRoles extends SuperCommand
                 uriUser: $selectedUserId,
                 uriApplicationRole: $uriRol
             );
-            // if ($response->getStatusCode() !== 200) {
-            //     $this->error("Error al asignar el rol: " . $response->getContent());
-            //     return 1;
-            // }
+            if (!$response['success']) {
+                $this->error("Error al asignar el rol: " . $response['error']);
+                return 1;
+            }
             $this->info("¡Listo! El rol '{$selectedRol['name']}' ha sido asignado al usuario seleccionado.");
         } else {
             $this->info('Operación cancelada.');

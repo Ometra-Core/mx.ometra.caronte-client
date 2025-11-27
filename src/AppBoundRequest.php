@@ -76,7 +76,7 @@ class AppBoundRequest
         return $response;
     }
 
-    public static function assignRoleToUser(string $uriUser, string $uriApplicationRole): string
+    public static function assignRoleToUser(string $uriUser, string $uriApplicationRole): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -96,16 +96,12 @@ class AppBoundRequest
 
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            throw new BadRequestException(
-                message: $e->getMessage(),
-                previous: $e
-            );
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response;
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
-    public static function createRole(string $name, string $description): string
+    public static function createRole(string $name, string $description): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -122,16 +118,14 @@ class AppBoundRequest
             if ($caronte_response->failed()) {
                 throw new RequestException($caronte_response);
             }
-
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            return '';
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response ?? '';
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
-    public static function updateRole(string $uriApplicationRole, string $description): string
+    public static function updateRole(string $uriApplicationRole, string $description): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -150,16 +144,12 @@ class AppBoundRequest
 
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            throw new BadRequestException(
-                message: $e->getMessage(),
-                previous: $e
-            );
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response;
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
-    public static function deleteRole(string $uriApplicationRole): string
+    public static function deleteRole(string $uriApplicationRole): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -172,20 +162,15 @@ class AppBoundRequest
             if ($caronte_response->failed()) {
                 throw new RequestException($caronte_response);
             }
-
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            throw new BadRequestException(
-                message: $e->getMessage(),
-                previous: $e
-            );
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response;
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
     //USERS MANAGEMENT METHODS
-    public static function createUser(string $name, string $email, string $password, string $password_confirmation): string
+    public static function createUser(string $name, string $email, string $password, string $password_confirmation): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -200,23 +185,17 @@ class AppBoundRequest
                     'password_confirmation' => $password_confirmation,
                 ]
             );
-
             if ($caronte_response->failed()) {
                 throw new RequestException($caronte_response);
             }
-
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            throw new BadRequestException(
-                message: $e->getMessage(),
-                previous: $e
-            );
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response ?? '';
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
-    public static function updateUser(string $uri_user, string $name): string
+    public static function updateUser(string $uri_user, string $name): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -228,23 +207,17 @@ class AppBoundRequest
                     'name' => $name
                 ]
             );
-
             if ($caronte_response->failed()) {
                 throw new RequestException($caronte_response);
             }
-
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            throw new BadRequestException(
-                message: $e->getMessage(),
-                previous: $e
-            );
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response ?? '';
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
-    public static function deleteRoleUser(string $uri_user, string $uri_applicationRole): string
+    public static function deleteRoleUser(string $uri_user, string $uri_applicationRole): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -253,22 +226,17 @@ class AppBoundRequest
             ])->delete(
                 config('caronte.URL') . 'api/app/users/roles/' . $uri_applicationRole . '/' . $uri_user
             );
-
             if ($caronte_response->failed()) {
                 throw new RequestException($caronte_response);
             }
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            throw new BadRequestException(
-                message: $e->getMessage(),
-                previous: $e
-            );
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response ?? '';
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 
-    public static function showRolesUser(string $uri_user): string
+    public static function showRolesUser(string $uri_user): array
     {
         try {
             $caronte_response = HTTP::withHeaders([
@@ -277,19 +245,13 @@ class AppBoundRequest
             ])->get(
                 config('caronte.URL') . 'api/app/users/' . $uri_user . '/roles',
             );
-
             if ($caronte_response->failed()) {
                 throw new RequestException($caronte_response);
             }
-
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            throw new BadRequestException(
-                message: $e->getMessage(),
-                previous: $e
-            );
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
         }
-
-        return $response ?? '';
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
 }

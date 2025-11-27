@@ -43,10 +43,10 @@ class CreateUser extends Command
         } while ($password != $password_confirmaiton);
 
         $response = AppBoundRequest::createUser(name: $name, email: $email, password: $password, password_confirmation: $password_confirmaiton);
-        // if ($response->getStatusCode() !== 200) {
-        //     $this->error("Error al crear el usuario: " . $response->getContent());
-        //     return 1;
-        // }
+        if (!$response['success']) {
+            $this->error("Error al crear el usuario: " . $response['error']);
+            return 1;
+        }
         $this->info("¡Listo! El usuario '{$name}' ha sido creado exitosamente.");
 
         return 0;

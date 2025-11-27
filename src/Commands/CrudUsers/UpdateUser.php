@@ -19,10 +19,10 @@ class UpdateUser extends Command
         $name_user = $this->argument('name_user');
         $newName = text('Escribe el nuevo nombre del usuario:');
         $response = AppBoundRequest::updateUser(uri_user: $uri_user, name: $newName);
-        // if ($response->getStatusCode() !== 200) {
-        //     $this->error("Error al actualizar el usuario: " . $response->getContent());
-        //     return 1;
-        // }
+        if (!$response['success']) {
+            $this->error("Error al actualizar el usuario: " . $response['error']);
+            return 1;
+        }
         $this->info("¡Listo! El usuario '{$name_user}' ha sido actualizado exitosamente.");
 
         return 0;
