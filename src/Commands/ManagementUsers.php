@@ -112,9 +112,7 @@ class ManagementUsers extends Command
             }
         } while (true);
         $response = AppBound::showRoles();
-        $response = $response->getData(true);
-        $roles = $response['data'] ?? [];
-        $roles = json_decode($roles, true);
+        $roles = json_decode($response, true);
         if (empty($roles)) {
             $this->warn("No hay roles registrados.");
             return 0;

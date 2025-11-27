@@ -17,10 +17,6 @@ class DeleteRole extends SuperCommand
         $uri_applicationRole = $this->argument('uri_rol');
         if (confirm("Seguro que deseas eliminar el rol: {$uri_applicationRole}?")) {
             $response = AppBound::deleteRole(uriApplicationRole: $uri_applicationRole);
-            if ($response->getStatusCode() !== 200) {
-                $this->error("Error al eliminar el rol: " . $response->getContent());
-                return 1;
-            }
             $this->info("¡Listo! El rol '{$uri_applicationRole}' ha sido eliminado exitosamente.");
         } else {
             $this->info('Operación cancelada.');

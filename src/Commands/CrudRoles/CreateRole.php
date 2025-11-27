@@ -17,10 +17,6 @@ class CreateRole extends SuperCommand
         $name = text('Escribe el nombre del nuevo rol:');
         $description = text('Escribe la descripción del nuevo rol:');
         $response = AppBound::createRole(description: $description, name: $name);
-        if ($response->getStatusCode() !== 200) {
-            $this->error("Error al crear el rol: " . $response->getContent());
-            return 1;
-        }
         $this->info("¡Listo! El rol '{$name}' ha sido creado exitosamente.");
 
         return 0;

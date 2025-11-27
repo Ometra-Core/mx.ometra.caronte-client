@@ -22,15 +22,13 @@ class AppBoundRequest
     }
 
     //ROLES MANAGEMENT METHODS
-    public static function showRoles(): JsonResponse|RedirectResponse|string
+    public static function showRoles(): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->get(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->get(
                 url: config('caronte.URL') . 'api/app/applications/' . AppBound::getAppId() . '/roles',
             );
 
@@ -46,22 +44,16 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response,
-            forward_url: null
-        );
+        return $response;
     }
 
-    public static function showUsers(string $paramSearch, bool $usersApp = false): JsonResponse|RedirectResponse
+    public static function showUsers(string $paramSearch, bool $usersApp = false): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->get(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->get(
                 config('caronte.URL') . 'api/app/users/',
                 [
                     'search' => $paramSearch,
@@ -81,22 +73,16 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response,
-            forward_url: null
-        );
+        return $response;
     }
 
-    public static function assignRoleToUser(string $uriUser, string $uriApplicationRole): JsonResponse|RedirectResponse
+    public static function assignRoleToUser(string $uriUser, string $uriApplicationRole): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->post(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->post(
                 config('caronte.URL') . 'api/app/users/roles/' . $uriApplicationRole . '/' . $uriUser,
                 [
                     'uri_user' => $uriUser,
@@ -116,22 +102,16 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response,
-            forward_url: null
-        );
+        return $response;
     }
 
-    public static function createRole(string $name, string $description): JsonResponse|RedirectResponse
+    public static function createRole(string $name, string $description): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->post(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->post(
                 config('caronte.URL') . 'api/app/applications/' . AppBound::getAppId() . '/roles',
                 [
                     'description' => $description,
@@ -145,34 +125,19 @@ class AppBoundRequest
 
             $response = $caronte_response->body();
         } catch (RequestException | Exception $e) {
-            // throw new BadRequestException(
-            //     message: $e->getMessage(),
-            //     previous: $e
-            // );
-
-            return ResponseHelper::success(
-                message: 'error',
-                data: $response ?? '',
-                forward_url: null
-            );
+            return '';
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response ?? '',
-            forward_url: null
-        );
+        return $response ?? '';
     }
 
-    public static function updateRole(string $uriApplicationRole, string $description): JsonResponse|RedirectResponse
+    public static function updateRole(string $uriApplicationRole, string $description): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->put(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->put(
                 config('caronte.URL') . 'api/app/applications/' . AppBound::getAppId() . '/roles/' . $uriApplicationRole,
                 [
                     'description' => $description
@@ -191,22 +156,16 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response,
-            forward_url: null
-        );
+        return $response;
     }
 
-    public static function deleteRole(string $uriApplicationRole): JsonResponse|RedirectResponse
+    public static function deleteRole(string $uriApplicationRole): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->delete(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->delete(
                 config('caronte.URL') . 'api/app/applications/' . AppBound::getAppId() . '/roles/' . $uriApplicationRole
             );
 
@@ -222,23 +181,17 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response,
-            forward_url: null
-        );
+        return $response;
     }
 
     //USERS MANAGEMENT METHODS
-    public static function createUser(string $name, string $email, string $password, string $password_confirmation): JsonResponse|RedirectResponse
+    public static function createUser(string $name, string $email, string $password, string $password_confirmation): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->post(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->post(
                 config('caronte.URL') . 'api/app/users',
                 [
                     'name' => $name,
@@ -260,22 +213,16 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response ?? '',
-            forward_url: null
-        );
+        return $response ?? '';
     }
 
-    public static function updateUser(string $uri_user, string $name): JsonResponse|RedirectResponse
+    public static function updateUser(string $uri_user, string $name): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->put(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->put(
                 config('caronte.URL') . 'api/app/users/' . $uri_user,
                 [
                     'name' => $name
@@ -294,22 +241,16 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response ?? '',
-            forward_url: null
-        );
+        return $response ?? '';
     }
 
-    public static function deleteRoleUser(string $uri_user, string $uri_applicationRole): JsonResponse|RedirectResponse
+    public static function deleteRoleUser(string $uri_user, string $uri_applicationRole): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->delete(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->delete(
                 config('caronte.URL') . 'api/app/users/roles/' . $uri_applicationRole . '/' . $uri_user
             );
 
@@ -324,22 +265,16 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response ?? '',
-            forward_url: null
-        );
+        return $response ?? '';
     }
 
-    public static function showRolesUser(string $uri_user): JsonResponse|RedirectResponse
+    public static function showRolesUser(string $uri_user): string
     {
         try {
-            $caronte_response = HTTP::withHeaders(
-                [
-                    'Authorization' => "Token " . AppBound::getToken(),
-                    'Accept' => 'application/json',
-                ]
-            )->get(
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->get(
                 config('caronte.URL') . 'api/app/users/' . $uri_user . '/roles',
             );
 
@@ -355,10 +290,6 @@ class AppBoundRequest
             );
         }
 
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response ?? '',
-            forward_url: null
-        );
+        return $response ?? '';
     }
 }

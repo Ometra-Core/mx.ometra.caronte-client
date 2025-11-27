@@ -68,87 +68,58 @@ class AppBound
         return storage_path('app/caronte-client/roles.json');
     }
 
-    public static function showRoles(): JsonResponse|RedirectResponse
+    public static function showRoles(): string
     {
         $roles = AppBound::getSetting('roles');
         if (is_null($roles)) {
             $roles = [];
-        } else {
-            $response = json_encode($roles);
         }
-
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response ?? null,
-            forward_url: null
-        );
+        return json_encode($roles);
     }
 
-    public static function createRole(string $name, string $description): JsonResponse|RedirectResponse
+    public static function createRole(string $name, string $description)
     {
         $newRoles = AppBound::getSetting('newRoles');
         if (is_null($newRoles)) {
             $newRoles = [];
-        } else {
-            $newRoles[] = [
-                'name' => $name,
-                'description' => $description,
-            ];
-            AppBound::saveSetting('newRoles', $newRoles);
-            $response = json_encode(['status' => 'success', 'message' => 'Role created locally. It will be synchronized later.']);
         }
-
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response ?? '',
-            forward_url: null
-        );
+        $newRoles[] = [
+            'name' => $name,
+            'description' => $description,
+        ];
+        AppBound::saveSetting('newRoles', $newRoles);
+        // No return
     }
 
-    public static function updateRole(string $uriApplicationRole, string $description): JsonResponse|RedirectResponse
+    public static function updateRole(string $uriApplicationRole, string $description)
     {
         $roles = AppBound::getSetting('roles');
         if (is_null($roles)) {
             $roles = [];
-        } else {
-            $rol = collect($roles)->firstWhere('uri_applicationRole', $uriApplicationRole);
-            if ($rol) {
-                $rol['description'] = $description;
-            }
+        }
+        $rol = collect($roles)->firstWhere('uri_applicationRole', $uriApplicationRole);
+        if ($rol) {
+            $rol['description'] = $description;
             $editRoles = AppBound::getSetting('editRoles');
             $editRoles[] = $rol;
             AppBound::saveSetting('editRoles', $editRoles);
-            $response = json_encode(['status' => 'success', 'message' => 'Role created locally. It will be synchronized later.']);
         }
-
-
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response,
-            forward_url: null
-        );
+        // No return
     }
 
-    public static function deleteRole(string $uriApplicationRole): JsonResponse|RedirectResponse
+    public static function deleteRole(string $uriApplicationRole)
     {
         $roles = AppBound::getSetting('roles');
         if (is_null($roles)) {
             $roles = [];
-        } else {
-            $rol = collect($roles)->firstWhere('uri_applicationRole', $uriApplicationRole);
-            if ($rol) {
-                $deleteRoles = AppBound::getSetting('deleteRoles');
-                $deleteRoles[] = $rol;
-                AppBound::saveSetting('deleteRoles', $deleteRoles);
-                $response = json_encode(['status' => 'success', 'message' => 'Role created locally. It will be synchronized later.']);
-            }
         }
-
-        return ResponseHelper::success(
-            message: 'ok',
-            data: $response,
-            forward_url: null
-        );
+        $rol = collect($roles)->firstWhere('uri_applicationRole', $uriApplicationRole);
+        if ($rol) {
+            $deleteRoles = AppBound::getSetting('deleteRoles');
+            $deleteRoles[] = $rol;
+            AppBound::saveSetting('deleteRoles', $deleteRoles);
+        }
+        // No return
     }
 
     public static function synchronizeRoles(): JsonResponse|RedirectResponse|string
@@ -160,9 +131,9 @@ class AppBound
         //return null if there is nothing to synchronize
         if (empty($newRoles) && empty($editRoles) && empty($deleteRoles)) {
             return ResponseHelper::success(
-            message: 'ok',
-            data: null,
-            forward_url: null
+                message: 'ok',
+                data: null,
+                forward_url: null
             );
         }
 
@@ -205,9 +176,7 @@ class AppBound
     {
         AppBound::synchronizeRoles();
         $response = AppBoundRequest::showRoles();
-        $response = $response->getData(true);
-        $roles = $response['data'] ?? [];
-        $roles = json_decode($roles, true);
+        $roles = json_decode($response, true);
         if (empty($roles)) {
             AppBound::saveSetting('roles', []);
         } else {
