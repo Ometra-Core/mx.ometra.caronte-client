@@ -30,8 +30,6 @@ class DeleteRolesUser extends Command
         );
         $option = array_search($selectedOption, $mainOptions);
         $roles = AppBoundRequest::showRolesUser(uri_user: $uri_user);
-        $roles = $roles->getData(true);
-        $roles = $roles['data'] ?? [];
         $roles = json_decode($roles, true);
         if (empty($roles)) {
             $this->error("No se encontraron roles asociados al usuario");
@@ -44,10 +42,10 @@ class DeleteRolesUser extends Command
                     foreach ($roles as $role) {
                         $uri_applicationRole = $role['uri_applicationRole'];
                         $response = AppBoundRequest::deleteRoleUser(uri_user: $uri_user, uri_applicationRole: $uri_applicationRole);
-                        if ($response->getStatusCode() !== 200) {
-                            $this->error("Error al eliminar el rol '{$uri_applicationRole}' del usuario: " . $response->getContent());
-                            return 1;
-                        }
+                        // if ($response->getStatusCode() !== 200) {
+                        //     $this->error("Error al eliminar el rol '{$uri_applicationRole}' del usuario: " . $response->getContent());
+                        //     return 1;
+                        // }
                     }
                 } else {
                     $this->info('Operación cancelada.');
@@ -79,10 +77,10 @@ class DeleteRolesUser extends Command
 
                 if (confirm("Seguro que deseas eliminar el rol <<{$selectedRol['name']}>> al usuario: {$name}?")) {
                     $response = AppBoundRequest::deleteRoleUser(uri_user: $uri_user, uri_applicationRole: $uriRol);
-                    if ($response->getStatusCode() !== 200) {
-                        $this->error("Error al eliminar el rol '{$uriRol}' del usuario: " . $response->getContent());
-                        return 1;
-                    }
+                    // if ($response->getStatusCode() !== 200) {
+                    //     $this->error("Error al eliminar el rol '{$uriRol}' del usuario: " . $response->getContent());
+                    //     return 1;
+                    // }
                     $this->info("¡Listo! El rol '{$selectedRol['name']}' ha sido eliminado del usuario seleccionado.");
                 } else {
                     $this->info('Operación cancelada.');

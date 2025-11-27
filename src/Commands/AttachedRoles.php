@@ -18,9 +18,7 @@ class AttachedRoles extends SuperCommand
     public function executeCommand()
     {
         $response = AppBoundRequest::showUsers(paramSearch: '');
-        $response = $response->getData(true);
-        $users = $response['data'] ?? [];
-        $users = json_decode($users, true);
+        $users = json_decode($response, true);
 
         if (empty($users)) {
             $this->error("No se encontraron usuarios");
@@ -89,10 +87,10 @@ class AttachedRoles extends SuperCommand
                 uriUser: $selectedUserId,
                 uriApplicationRole: $uriRol
             );
-            if ($response->getStatusCode() !== 200) {
-                $this->error("Error al asignar el rol: " . $response->getContent());
-                return 1;
-            }
+            // if ($response->getStatusCode() !== 200) {
+            //     $this->error("Error al asignar el rol: " . $response->getContent());
+            //     return 1;
+            // }
             $this->info("¡Listo! El rol '{$selectedRol['name']}' ha sido asignado al usuario seleccionado.");
         } else {
             $this->info('Operación cancelada.');

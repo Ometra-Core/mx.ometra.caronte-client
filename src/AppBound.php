@@ -140,25 +140,25 @@ class AppBound
         //save roles
         foreach ($newRoles as $roleNew) {
             $response = AppBoundRequest::createRole($roleNew['name'], $roleNew['description']);
-            if ($response->getStatusCode() !== 200) {
-                //TODO:escribir en el log los errores
-            }
+            // if ($response->getStatusCode() !== 200) {
+            //     //TODO:escribir en el log los errores
+            // }
         }
 
         //update roles
         foreach ($editRoles as $roleEdit) {
             $response = AppBoundRequest::updateRole(uriApplicationRole: $roleEdit['uri_applicationRole'], description: $roleEdit['description']);
-            if ($response->getStatusCode() !== 200) {
-                //TODO:escribir en el log los errores
-            }
+            // if ($response->getStatusCode() !== 200) {
+            //     //TODO:escribir en el log los errores
+            // }
         }
 
         //delete roles
         foreach ($deleteRoles as $roleDelete) {
             $response = AppBoundRequest::deleteRole($roleDelete['uri_applicationRole']);
-            if ($response->getStatusCode() !== 200) {
-                //TODO:escribir en el log los errores
-            }
+            // if ($response->getStatusCode() !== 200) {
+            //     //TODO:escribir en el log los errores
+            // }
         }
 
         AppBound::saveSetting('newRoles', []);
