@@ -26,8 +26,7 @@ Add the following environment variables to your `.env` file and adjust them acco
 | `CARONTE_SUCCESS_URL`           | `/`                                | Redirect URL after authentication                                |
 | `CARONTE_LOGIN_URL`             | `/login`                           | Login route                                                      |
 | `CARONTE_UPDATE_USER`           | `false`                            | Update users in local DB (requires migration)                    |
-| `CARONTE_TOKEN_TTL`             | `460`                              | Token time-to-live (in seconds)                                  |
-| `APP_TIMEZONE`                  | `America/Mexico_City`              | Application timezone                                             |
+| `CARONTE_TOKEN_TTL`             | `460`                              | Token time-to-live (in seconds)                                                
 
 #### Real-world configuration example
 
@@ -49,26 +48,68 @@ If you want to enable user synchronization (`CARONTE_UPDATE_USER=true`), run the
 
 php artisan migrate---
 
-## 🛠 Available Commands
+# 🛠 Available Commands
 
-This package includes artisan commands (prefix `caronte-client`) for administration and management directly from the console. Example of common commands:
+This package includes artisan commands (prefix `caronte-client`) for administration and management directly from the console for the autonomous administration of each system
 
-| Command                                   | Description                                                |
-|--------------------------------------------|------------------------------------------------------------|
-| `php artisan caronte-client:sync-roles`    | Synchronize roles between Caronte and your local app       |
-| `php artisan caronte-client:list-roles`    | List available roles                                      |
-| `php artisan caronte-client:create-role`   | Create a new role                                         |
-| `php artisan caronte-client:update-role`   | Update role properties                                    |
-| `php artisan caronte-client:delete-role`   | Delete a role                                             |
-| `php artisan caronte-client:assign-role`   | Assign a role to a user                                   |
-| `php artisan caronte-client:remove-role`   | Remove a role from a user                                 |
-| `php artisan caronte-client:list-users`    | List registered users                                     |
-| `php artisan caronte-client:create-user`   | Create a user (local or synchronized)                     |
-| `php artisan caronte-client:update-user`   | Edit a user (local or synchronized)                       |
-| `php artisan caronte-client:delete-user`   | Delete a user                                             |
-| `php artisan caronte-client:show-user-roles`| Show all roles assigned to a user                        |
-| `php artisan caronte-client:attach-roles`  | Attach several roles to users (batch)                     |
-| `php artisan caronte-client:detach-roles`  | Detach roles from users (batch)                           |
-| `php artisan caronte-client:status`        | Display connection and authentication registries info      |
+##### **🟢 Main Entry Point**
 
-> _Use_ `php artisan list | grep caronte-client` _to see all available commands and descriptions in your project._
+`php artisan caronte-client:management`
+Interactive menu to manage **Users** and **Roles** via wizard. 
+From here, operations are divided into two main branches: **Role Management** and **User Management**. 
+
+##### 🛡 1. Role Management
+
+Manage the definitions of roles within the application scope.
+
+
+| Name  | Command  | Description  |   
+|---|---|---|
+| *create role*  | `php artisan caronte-client:create-role`  | Create a new role  |
+| **manage an existing role**  | `php artisan caronte-client:management-roles`  | Management of existing roles  |
+| *view existing roles*  | `php artisan caronte-client:show-roles`  | List existing roles  |
+
+**Commands for the CRUD of roles**
+
+| Name  | Command  | Description  |   
+|---|---|---|
+| *edit role*  | `php artisan caronte-client:create-role {uri_rol}`  | Update the  description of a role  |
+| *delete a role*  | `php artisan caronte-client:delete-role {uri_rol}`  | Delete a role  |
+
+
+#### 👥 2. User Management & Workflow
+
+User management allows for full CRUD operations, but strict rules apply to ensure data integrity within the application context.
+
+> [!IMPORTANT] **⚠️ Dependency Warning: Link Roles First**
+> 
+> To perform specific operations on a user (like updating details or managing their roles), the user **MUST** be linked to the application first.
+> 
+> **The Flow:**
+> 
+> 1.  User exists in the system.
+>     
+> 2.  **Execute `caronte-client:attached-roles`** to link an App Role to the user.
+>     
+> 3.  Now you can use `update-user`, `delete-roles-user`, etc.
+
+| Name  | Command  | Description  |   
+|---|---|---|
+| *create user*  | `php artisan caronte-client:create-user`  | Create a user  |
+| **manage an existing user**  | `php artisan caronte-client:management-users`  | Managing an existing user  |
+| **attached roles to a user**  | `php artisan caronte-client:attached-roles`  | Attached roles an existing user  |
+
+**Commands for the management users**
+First of all, the user is searched for and selected, then it is managed. 
+`Note: It is very important to take into account the aforementioned workflow`
+
+| Name  | Command  | Description  |   
+|---|---|---|
+| *edit user*  | `php artisan caronte-client:update-user {uri_user} {name_user}`  | Update the  name of a user  |
+| **delete roles associated with the user**  | `php artisan caronte-client:delete-roles-user {uri_user} {name_user}`  | Removes app roles that belong to the user  |
+| *show roles in the application*  | `php artisan caronte-client:users-roles {uri_user}`  | Show Roles attached by user within the application  |
+
+**Options to revoke roles**
+__There are two options: select a specific role to remove or remove all roles associated with the user in the application__
+
+
