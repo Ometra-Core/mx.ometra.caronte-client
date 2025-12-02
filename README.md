@@ -3,12 +3,29 @@
 Caronte Client is a Laravel package that provides distributed authentication middlewares and a set of commands for secure self-management in PHP projects. It allows seamless integration of robust authentication, access control, and management of users and roles, all configurable and extensible within the framework.
 
 ---
+### Main Use Cases
 
+- Secure user authentication using JWT tokens
+- Fine-grained permission and role management
+- Middleware for session and role validation in Laravel routes
+- Helper utilities for user and permission logic
+- Facade for easy access to authentication features
+- Artisan commands for configuration and environment sync
+- Publishing of config, views, assets, and migrations for customization
+
+
+---
 ## 🏁 Quickstart
 
-### Installation
+## Installation
+Install Caronte Client via Composer:
 
-composer require caronte/client### Environment Configuration
+```bash
+composer require ometra/caronte-client:@dev
+```
+---
+
+## Configuration
 
 Add the following environment variables to your `.env` file and adjust them according to your project needs:
 
@@ -45,9 +62,8 @@ APP_TIMEZONE=America/Mexico_City
 CARONTE_TOKEN_TTL=460### Migrations (optional)
 
 If you want to enable user synchronization (`CARONTE_UPDATE_USER=true`), run the migrations:
-
 php artisan migrate---
-
+---
 # 🛠 Available Commands
 
 This package includes artisan commands (prefix `caronte-client`) for administration and management directly from the console for the autonomous administration of each system
@@ -111,5 +127,44 @@ First of all, the user is searched for and selected, then it is managed.
 
 **Options to revoke roles**
 __There are two options: select a specific role to remove or remove all roles associated with the user in the application__
+---
+## Usage Examples
+### Authenticating Users
+```php
+use Caronte;
+// Retrieve the current JWT token
+$token = Caronte::getToken();
+// Get the authenticated user object from the token
+$user = Caronte::getUser();
+```
+### Middleware Integration
 
+Add Caronte middleware to your routes for session and role validation:
 
+```php
+// In your routes/web.php or routes/api.php
+Route::middleware(['Caronte.ValidateSession'])->group(function () {
+    Route::get('/dashboard', function () {
+        // Only accessible to authenticated users
+    });
+});
+
+Route::middleware(['Caronte.ValidateRoles:administrator,manager'])->group(function () {
+    Route::get('/admin', function () {
+        // Only accessible to users with administrator or manager roles (or root)
+    });
+});
+```
+### Permission Checks in Code
+```php
+use Equidna\Caronte\Helpers\PermissionHelper;
+// Check if the user has access to the application
+if (PermissionHelper::hasApplication()) {
+    // User has access
+}
+
+// Check if the user has a specific role
+if (PermissionHelper::hasRoles(['administrator', 'editor'])) {
+    // User has one of the required roles
+}
+```
