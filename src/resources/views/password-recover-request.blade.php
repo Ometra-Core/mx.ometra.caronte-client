@@ -3,7 +3,7 @@
 @section('title-form', 'Recupera tu contraseña')
 
 @section('content')
-    <form method="POST">
+    <form method="POST" action="{{ route('caronte.password.recover.request') }}">
         @csrf
         <div class="form-group mt-3 text-center">
             <label for="email">Correo electrónico:</label>
