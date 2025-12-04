@@ -18,22 +18,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('Users')) {
-            Schema::create('Users', function (Blueprint $table) {
+        if (!Schema::hasTable('CC_Users')) {
+            Schema::create('CC_Users', function (Blueprint $table) {
                 $table->string('uri_user', 40)->primary();
                 $table->string('name', 150);
                 $table->string('email', 150);
                 $table->engine = 'InnoDB';
             });
         } else {
-            Schema::table('Users', function (Blueprint $table) {
-                if (!Schema::hasColumn('Users', 'uri_user')) {
+            Schema::table('CC_Users', function (Blueprint $table) {
+                if (!Schema::hasColumn('CC_Users', 'uri_user')) {
                     $table->string('uri_user', 40);
                 }
-                if (!Schema::hasColumn('Users', 'name')) {
+                if (!Schema::hasColumn('CC_Users', 'name')) {
                     $table->string('name', 150);
                 }
-                if (!Schema::hasColumn('Users', 'email')) {
+                if (!Schema::hasColumn('CC_Users', 'email')) {
                     $table->string('email', 150);
                 }
                 $table->engine = 'InnoDB';
@@ -46,6 +46,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Users');
+        Schema::dropIfExists('CC_Users');
     }
 };
