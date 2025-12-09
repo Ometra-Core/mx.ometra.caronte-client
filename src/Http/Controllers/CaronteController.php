@@ -18,10 +18,20 @@ use Ometra\Caronte\Jobs\SynchronizeRoles;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Inertia\Response as InertiaResponse;
+use Ometra\Caronte\AppBoundRequest;
 use Nette\Utils\Json;
 
 class CaronteController extends Controller
 {
+    protected function toView(string $viewPath, mixed $data): View | InertiaResponse
+    {
+        if (config('caronte.USE_INERTIA')) {
+            return inertia($viewPath, $data);
+        } else {
+            return view('caronte::' . $viewPath)
+                ->with($data);
+        }
+    }
     /**
      * Show the login form view.
      *
@@ -32,16 +42,9 @@ class CaronteController extends Controller
     {
         $login_view = config('caronte.USE_2FA') ? '2fa-login' : 'login';
 
-        if (config('caronte.USE_INERTIA')) {
-            return inertia('Auth/Login');
-        }
-
-        return view('caronte::' . $login_view)
-            ->with(
-                [
-                    'callback_url' => $request->callback_url,
-                ]
-            );
+        return $this->toView($login_view, [
+            'callback_url' => $request->callback_url,
+        ]);
     }
 
     /**
@@ -76,9 +79,9 @@ class CaronteController extends Controller
      *
      * @return View Password recovery request form view.
      */
-    public function passwordRecoverRequestForm(): View
+    public function passwordRecoverRequestForm(): View|InertiaResponse
     {
-        return view('caronte::password-recover-request');
+        return $this->toView('password-recover-request', []);
     }
 
     /**
@@ -146,5 +149,22 @@ class CaronteController extends Controller
     {
         SynchronizeRoles::dispatch();
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Show the management view.
+     *
+     * @param Request $request HTTP request object.
+     * @return View management form view.
+     */
+    public function managementApp(Request $request): View
+    {
+        $users = AppBoundRequest::showUsers("", true);
+        $users = json_decode($users['data'], true);
+        $login_view = config('caronte.MANAGEMENT_VIEW');
+        return $this->toView($login_view, [
+            'callback_url' => $request->callback_url,
+            'users' => $users,
+        ]);
     }
 }

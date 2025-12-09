@@ -35,4 +35,5 @@ Route::middleware([DisableDebugbar::class])->group(function () {
         ->middleware([ExcludeFromHistory::class,]);
 
     Route::post('set-metadata', [CaronteController::class, 'setMetadata'])->name('caronte.set-metadata');
+    Route::get('/caronte-client-management', [CaronteController::class, 'managementApp'])->name('caronte.caronte-client.management');
 });

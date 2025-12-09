@@ -102,7 +102,7 @@ class ManagementUsers extends Command
                     $this->call('caronte-client:attached-roles');
                     break;
                 case '3':
-                    $this->info('Saliendo del gestor de roles...');
+                    $this->info('Saliendo del gestor de usuarios...');
                     return 0;
                 default:
                     $this->error('Opción no válida. Por favor, intenta de nuevo.');
