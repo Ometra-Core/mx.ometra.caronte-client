@@ -32,13 +32,15 @@
                             <td class="border-end text-start ps-3">{{ $user['name'] }}</td>
                             <td class="border-end text-start ps-3">{{ $user['email'] }}</td>
                             <td>
-                                <button class="btn btn-sm btn-link text-dark" title="Settings" data-bs-toggle="modal"
-                                    data-bs-target="#rolesModal">
+                                <button class="btn btn-sm btn-link text-dark" title="Settings"
+                                    data-userId="{{ $user['uri_user'] }}" data-userName="{{ $user['name'] }}"
+                                    data-bs-toggle="modal" data-bs-target="#rolesModal">
                                     <i class="fa-solid fa-gear fs-5"></i>
                                 </button>
 
                                 <button class="btn btn-sm btn-link text-dark" title="Edit" data-bs-toggle="modal"
-                                    data-bs-target="#managesModal">
+                                    data-userId="{{ $user['uri_user'] }}" data-userName="{{ $user['name'] }}"
+                                    data-user-email={{ $user['email'] }} data-bs-target="#managesModal">
                                     <i class="fa-solid fa-pen-to-square fs-5"></i>
                                 </button>
                             </td>
@@ -52,3 +54,6 @@
 </div>
 @include('caronte::Management.Modals.RolesModal')
 @include('caronte::Management.Modals.ManagesModal')
+@include('caronte::Management.Modals.Confirm')
+@include('caronte::Management.Modals.ConfirmDeleteRole')
+@include('caronte::Management.Modals.ConfirmDeleteUser')

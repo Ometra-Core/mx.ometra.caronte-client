@@ -36,4 +36,16 @@ Route::middleware([DisableDebugbar::class])->group(function () {
 
     Route::post('set-metadata', [CaronteController::class, 'setMetadata'])->name('caronte.set-metadata');
     Route::get('/caronte-client-management', [CaronteController::class, 'managementApp'])->name('caronte.caronte-client.management');
+
+    Route::prefix('caronte-client-management')->group(function () {
+        Route::get('/', [CaronteController::class, 'managementApp'])->name('caronte.caronte-client.management');
+        Route::post('/create-user', [CaronteController::class, 'createUser'])->name('caronte.management.store');
+        Route::get('/create', [CaronteController::class, 'managementCreate'])->name('caronte.management.create');
+        Route::get('roles-user/{uri_user}', [CaronteController::class, 'getRolesByUser'])->name('caronte.management.roles-by-user');
+        Route::get('all-roles', [CaronteController::class, 'getAllRoles'])->name('caronte.management.all-roles');
+        Route::post('attach-roles', [CaronteController::class, 'attachRolesToUser'])->name('caronte.management.attach-roles');
+        Route::post('delete-roles', [CaronteController::class, 'deleteRolesFromUser'])->name('caronte.management.delete-roles');
+        Route::post('/update-user', [CaronteController::class, 'updateUser'])->name('caronte.management.update-user');
+        Route::post('/delete-user', [CaronteController::class, 'deleteUser'])->name('caronte.management.delete-user');
+    });
 });

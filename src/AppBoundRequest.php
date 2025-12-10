@@ -253,4 +253,23 @@ class AppBoundRequest
         }
         return ['success' => true, 'data' => $response ?? null, 'error' => null];
     }
+
+    public static function deleteUser(string $uri_user): array
+    {
+        try {
+            $caronte_response = HTTP::withHeaders([
+                'Authorization' => "Token " . AppBound::getToken(),
+                'Accept' => 'application/json',
+            ])->delete(
+                config('caronte.URL') . 'api/app/users/' . $uri_user
+            );
+            if ($caronte_response->failed()) {
+                throw new RequestException($caronte_response);
+            }
+            $response = $caronte_response->body();
+        } catch (RequestException | Exception $e) {
+            return ['success' => false, 'data' => null, 'error' => $e->getMessage()];
+        }
+        return ['success' => true, 'data' => $response ?? null, 'error' => null];
+    }
 }

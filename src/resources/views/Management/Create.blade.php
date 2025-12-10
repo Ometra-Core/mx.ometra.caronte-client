@@ -5,15 +5,16 @@
     </div>
 
     <div class="card-body p-4">
-        <form>
+        <form method="POST" action="{{ route('caronte.management.store') }}">
+            @csrf
             <div class="mb-4">
                 <label for="nameInput" class="form-label fw-semibold">Name</label>
-                <input type="text" class="form-control custom-input py-2" id="nameInput">
+                <input type="text" class="form-control custom-input py-2" id="nameInput" name="name">
             </div>
 
             <div class="mb-5">
                 <label for="emailInput" class="form-label fw-semibold">Email</label>
-                <input type="email" class="form-control custom-input py-2" id="emailInput">
+                <input type="email" class="form-control custom-input py-2" id="emailInput" name="email">
             </div>
 
             <div class="d-flex justify-content-between">

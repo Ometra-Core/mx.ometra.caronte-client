@@ -167,4 +167,92 @@ class CaronteController extends Controller
             'users' => $users,
         ]);
     }
+
+    //MANAGEMENT OF USER FUNCTIONS (APPBOUNDREQUEST)
+    public function createUser(Request $request): RedirectResponse
+    {
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $password = bin2hex(random_bytes(4));
+        $response = AppBoundRequest::createUser(name: $name, email: $email, password: $password, password_confirmation: $password);
+        if (!$response['success']) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al crear al usuario: ' . $response['error']);
+        }
+        return redirect()
+            ->back()
+            ->with('success', 'Usuario creado correctamente.');
+    }
+
+    public function getRolesByUser(Request $request, string $uri_user): JsonResponse
+    {
+        $response = AppBoundRequest::showRolesUser(uri_user: $uri_user);
+        return response()->json($response);
+    }
+
+    public function getAllRoles(Request $request): JsonResponse
+    {
+        $response = AppBoundRequest::showRoles();
+        return response()->json($response);
+    }
+
+    public function attachRolesToUser(Request $request): RedirectResponse
+    {
+        $uri_user = $request->input('uri_user');
+        $uri_rol = $request->input('uri_rol');
+        $response = AppBoundRequest::assignRoleToUser(uriUser: $uri_user, uriApplicationRole: $uri_rol);
+        if (!$response['success']) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al enlazar el rol: ' . $response['error']);
+        }
+        return redirect()
+            ->back()
+            ->with('success', 'Rol enlazado correctamente.');
+    }
+
+    public function deleteRolesFromUser(Request $request): RedirectResponse
+    {
+        $uri_user = $request->input('uri_user');
+        $uri_rol = $request->input('uri_rol');
+        $response = AppBoundRequest::deleteRoleUser(uri_user: $uri_user, uri_applicationRole: $uri_rol);
+        if (!$response['success']) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al eliminar el rol: ' . $response['error']);
+        }
+        return redirect()
+            ->back()
+            ->with('success', 'Rol eliminado correctamente.');
+    }
+
+    public function updateUser(Request $request): RedirectResponse
+    {
+        $uri_user = $request->input('uri_user');
+        $name = $request->input('name');
+        $response = AppBoundRequest::updateUser(uri_user: $uri_user, name: $name);
+        if (!$response['success']) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al actualizar el usuario: ' . $response['error']);
+        }
+        return redirect()
+            ->back()
+            ->with('success', 'Usuario actualizado correctamente.');
+    }
+
+    public function deleteUser(Request $request): RedirectResponse
+    {
+        $uri_user = $request->input('uri_user');
+        $response = AppBoundRequest::deleteUser(uri_user: $uri_user);
+        if (!$response['success']) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al eliminar el usuario: ' . $response['error']);
+        }
+        return redirect()
+            ->back()
+            ->with('success', 'Usuario eliminado correctamente.');
+    }
 }
