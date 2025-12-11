@@ -1,36 +1,50 @@
 @extends('caronte::base')
 
-@section('content')    
-    <form method="POST">
-        @csrf
-        <div class="Wrapper__Login d-flex justify-content-center">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 col-md-2"></div>
-                    <div class="col-lg-6 col-md-8 login-box">
-                        <div class="col-lg-12 login-title py-5">
-                            INICIAR SESIÓN
-                        </div>
-                        <div class="col-lg-12 login-form">
-                            <div class="form-group">
-                                <label for="email" class="form-control-label">Correo electrónico</label>
-                                <input type="email" name="email" value="{{ session('email') }}" class="form-control">
+@section('content')
+    <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+        <div class="row w-100 justify-content-center">
+            <div class="col-md-8 col-lg-5">
+
+                {{-- Tarjeta de Login --}}
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-primary text-white text-center py-4">
+                        <h3 class="font-weight-light my-2">INICIAR SESIÓN</h3>
+                    </div>
+
+                    <div class="card-body p-5">
+                        <form method="POST">
+                            @csrf
+
+                            {{-- Input Email --}}
+                            <div class="mb-3">
+                                <label for="email" class="form-label text-muted">Correo electrónico</label>
+                                <input type="email" id="email" name="email" value="{{ session('email') }}"
+                                    class="form-control form-control-lg" placeholder="nombre@ejemplo.com" required>
                             </div>
-                            <div class="form-group">
-                                <label for="password" class="form-control-label">Contraseña</label>
-                                <input type="password" name="password" class="form-control">
-                                <a href="/password/recover">¿Olvidaste tu contraseña?</a>
+
+                            {{-- Input Password --}}
+                            <div class="mb-3">
+                                <label for="password" class="form-label text-muted">Contraseña</label>
+                                <input type="password" id="password" name="password" class="form-control form-control-lg"
+                                    placeholder="********" required>
                             </div>
-                            <div class="col-lg-12 loginbttm">
-                                <div class="col-lg-12 login-btm login-button">
-                                    <input type="submit" value="Entrar" class="btn btn-outline-primary">
-                                </div>
+
+                            {{-- Link Olvidé contraseña --}}
+                            <div class="d-flex justify-content-end mb-4">
+                                <a href="/password/recover" class="text-decoration-none small text-muted">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
                             </div>
-                        </div>
-                        </div>
+
+                            {{-- Botón --}}
+                            <div class="d-grid gap-2">
+                                <input type="submit" value="Entrar" class="btn btn-primary btn-lg">
+                            </div>
+                        </form>
                     </div>
                 </div>
+
             </div>
         </div>
-    </form>    
+    </div>
 @endsection

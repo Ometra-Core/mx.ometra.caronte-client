@@ -29,4 +29,5 @@ return [
     'UPDATE_LOCAL_USER' => env('CARONTE_UPDATE_USER', false),
 
     'USE_INERTIA' => env('CARONTE_USE_INERTIA', false),
+    'MANAGEMENT_VIEW' => env('CARONTE_MANAGEMENT_VIEW', 'management')
 ];

@@ -1,0 +1,129 @@
+/* --- Paleta de Colores Personalizada --- */
+:root {
+    --custom-bg-subtle: #e2e6e1;
+    /* Fondo gris verdoso claro para contenedores */
+    --custom-bg-active: #c4cdc5;
+    /* Color más oscuro para elementos activos/encabezados */
+    --custom-input-bg: #e9ecef;
+    /* Fondo gris para los inputs */
+}
+
+/* --- 1. Estilos de Navegación Superior --- */
+.custom-nav-block {
+    background-color: var(--custom-bg-subtle);
+}
+
+.custom-btn-active {
+    background-color: var(--custom-bg-active);
+    color: #000;
+    border: 1px solid #b3beb5;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
+.custom-btn-light {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
+}
+
+/* --- 2. Estilos de las Pestañas (Tabs) --- */
+.custom-tabs-container {
+    background-color: var(--custom-bg-subtle);
+    /* Importante: quitamos el redondeo inferior para unir con la tarjeta */
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.custom-tab-link {
+    color: #495057;
+    /* Color de texto inactivo */
+    font-weight: 500;
+}
+
+.custom-tab-link.active {
+    background-color: var(--custom-bg-active) !important;
+    color: #000 !important;
+    border: 1px solid #b3beb5;
+}
+
+/* --- 3. Estilos de la Tarjeta y Formulario --- */
+.custom-card {
+    /* Quitamos el redondeo superior para que se pegue a las pestañas */
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border: 1px solid var(--custom-bg-subtle);
+}
+
+.custom-card-header {
+    background-color: var(--custom-bg-active);
+    border-bottom: none;
+    /* Aseguramos que no tenga esquinas redondeadas */
+    border-radius: 0 !important;
+}
+
+/* Inputs con fondo gris */
+.form-control.custom-input {
+    background-color: var(--custom-input-bg);
+    border: 1px solid #ced4da;
+}
+
+.form-control.custom-input:focus {
+    background-color: #fff;
+    /* Al hacer foco se vuelve blanco */
+    border-color: #a0a0a0;
+    box-shadow: none;
+}
+
+/* Botones inferiores */
+.custom-btn-submit {
+    background-color: var(--custom-bg-active);
+    color: #000;
+    font-weight: 500;
+}
+
+.custom-btn-submit:hover {
+    background-color: #b3beb5;
+}
+
+.custom-btn-cancel {
+    background-color: var(--custom-input-bg);
+    color: #000;
+    font-weight: 500;
+}
+
+.bgManagement {
+    background-color: #CAD2C5;
+    height: 60px;
+}
+
+.form-control:focus {
+    border-color: #CAD2C5;
+    box-shadow: 0 0 0 0.25rem rgba(202, 210, 197, 0.25);
+}
+
+
+.custom-btn-submit {
+    background-color: #CAD2C5 !important;
+    border: 1px solid #8e968a !important;
+    color: #000 !important;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.custom-btn-submit:hover {
+    background-color: #b8c0b4 !important;
+    /* Un poco más oscuro al pasar el mouse */
+}
+
+
+.custom-btn-cancel {
+    background-color: #E8E8E8 !important;
+    border: 1px solid #A0A0A0 !important;
+    color: #000 !important;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.custom-btn-cancel:hover {
+    background-color: #dcdcdc !important;
+}

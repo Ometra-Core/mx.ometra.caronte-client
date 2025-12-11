@@ -111,7 +111,7 @@ class CaronteServiceProvider extends ServiceProvider
                 __DIR__ . '/../resources/assets' => public_path('vendor/caronte'),
             ],
             [
-                'caronte:assets',
+                'caronte-assets',
                 'caronte',
             ]
         );
