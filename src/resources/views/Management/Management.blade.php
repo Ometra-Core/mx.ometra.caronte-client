@@ -7,7 +7,10 @@
     <div class="card-body p-4">
         <div class="mb-3">
             <label for="searchUser" class="form-label fw-semibold">Search user:</label>
-
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+                <label class="form-check-label" for="switchCheckDefault">Incluir usuarios ajenos a la aplicación</label>
+            </div>
             <div class="input-group">
                 <input type="text" class="form-control" id="searchUser" placeholder="Type name or email...">
 
@@ -26,7 +29,8 @@
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="usersListContainer">
+
                     @foreach ($users as $user)
                         <tr>
                             <td class="border-end text-start ps-3">{{ $user['name'] }}</td>

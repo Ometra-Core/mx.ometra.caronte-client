@@ -16,6 +16,14 @@
                 <label for="emailInput" class="form-label fw-semibold">Email</label>
                 <input type="email" class="form-control custom-input py-2" id="emailInput" name="email">
             </div>
+            <div class="mb-5">
+                <label for="emailInput" class="form-label fw-semibold">Select the role to attach: </label>
+                <select class="form-select" id="selectRolesUser" aria-label="Default select example"
+                    name="uri_applicationRole">
+                    <option selected>Select a role</option>
+                </select>
+            </div>
+
 
             <div class="d-flex justify-content-between">
                 <button type="submit" class="btn custom-btn-submit px-5 py-2">

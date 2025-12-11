@@ -47,5 +47,6 @@ Route::middleware([DisableDebugbar::class])->group(function () {
         Route::post('delete-roles', [CaronteController::class, 'deleteRolesFromUser'])->name('caronte.management.delete-roles');
         Route::post('/update-user', [CaronteController::class, 'updateUser'])->name('caronte.management.update-user');
         Route::post('/delete-user', [CaronteController::class, 'deleteUser'])->name('caronte.management.delete-user');
+        Route::get('/users', [CaronteController::class, 'listUsers'])->name('caronte.management.users');
     });
 });

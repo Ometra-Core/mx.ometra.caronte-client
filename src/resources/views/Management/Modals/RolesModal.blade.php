@@ -30,7 +30,12 @@
                 </table>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#confirmDeleteRoleModal" id="btnDeleteAllRoles">
+                    <i class="fa-solid fa-trash me-2"></i>
+                    Desautorizar usuario
+                </button>
             </div>
         </div>
     </div>

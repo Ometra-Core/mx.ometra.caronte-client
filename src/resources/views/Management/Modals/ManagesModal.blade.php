@@ -26,9 +26,9 @@
                     <button type="button" class="btn btn-info" id="btnUpdateUser">
                         <i class="fa-solid fa-pen-to-square me-2"></i>
                     </button>
-                    <button type="button" class="btn btn-danger" id="btnDeleteUser">
+                    {{-- <button type="button" class="btn btn-danger" id="btnDeleteUser">
                         <i class="fa-solid fa-trash me-2"></i>
-                    </button>
+                    </button> --}}
                 </form>
             </div>
             <div class="modal-footer">

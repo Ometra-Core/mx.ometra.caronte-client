@@ -173,13 +173,24 @@ class CaronteController extends Controller
     {
         $name = $request->input('name');
         $email = $request->input('email');
+        $uri_rol = $request->input('uri_applicationRole');
         $password = bin2hex(random_bytes(4));
         $response = AppBoundRequest::createUser(name: $name, email: $email, password: $password, password_confirmation: $password);
+
         if (!$response['success']) {
             return redirect()
                 ->back()
                 ->with('error', 'Error al crear al usuario: ' . $response['error']);
         }
+        $response = json_decode($response['data'], true);
+        $user = $response['user'];
+        $response = AppBoundRequest::assignRoleToUser(uriUser: $user['uri_user'], uriApplicationRole: $uri_rol);
+        if (!$response['success']) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al enlazar el rol');
+        }
+
         return redirect()
             ->back()
             ->with('success', 'Usuario creado correctamente.');
@@ -216,15 +227,32 @@ class CaronteController extends Controller
     {
         $uri_user = $request->input('uri_user');
         $uri_rol = $request->input('uri_rol');
-        $response = AppBoundRequest::deleteRoleUser(uri_user: $uri_user, uri_applicationRole: $uri_rol);
-        if (!$response['success']) {
+
+        if ($request->input('allRoles')) {
+            $roles = AppBoundRequest::showRolesUser(uri_user: $uri_user);
+            $roles = json_decode($roles['data'], true);
+            foreach ($roles as $role) {
+                $response = AppBoundRequest::deleteRoleUser(uri_user: $uri_user, uri_applicationRole: $role['uri_applicationRole']);
+                if (!$response['success']) {
+                    return redirect()
+                        ->back()
+                        ->with('error', 'Error al eliminar el rol: ' . $response['error']);
+                }
+            }
             return redirect()
                 ->back()
-                ->with('error', 'Error al eliminar el rol: ' . $response['error']);
+                ->with('success', 'Todos los roles eliminados correctamente.');
+        } else {
+            $response = AppBoundRequest::deleteRoleUser(uri_user: $uri_user, uri_applicationRole: $uri_rol);
+            if (!$response['success']) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Error al eliminar el rol: ' . $response['error']);
+            }
+            return redirect()
+                ->back()
+                ->with('success', 'Rol eliminado correctamente.');
         }
-        return redirect()
-            ->back()
-            ->with('success', 'Rol eliminado correctamente.');
     }
 
     public function updateUser(Request $request): RedirectResponse
@@ -254,5 +282,12 @@ class CaronteController extends Controller
         return redirect()
             ->back()
             ->with('success', 'Usuario eliminado correctamente.');
+    }
+
+    public function listUsers(Request $request): JsonResponse
+    {
+        $usersApp = $request->input('usersApp') == 'false' ? false : true;
+        $response = AppBoundRequest::showUsers(paramSearch: $request->input('search') ?? '', usersApp: $usersApp);
+        return response()->json($response);
     }
 }

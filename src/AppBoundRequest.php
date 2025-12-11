@@ -62,6 +62,7 @@ class AppBoundRequest
             );
 
             if ($caronte_response->failed()) {
+                dd($usersApp);
                 throw new RequestException($caronte_response);
             }
 
