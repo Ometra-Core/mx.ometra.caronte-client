@@ -147,19 +147,18 @@ class CaronteServiceProvider extends ServiceProvider
             ]);
         }
 
-        if (config('caronte.PROPS_INERTIA')) {
-            Inertia::share('caronte_user', function () {
-                try {
-                    if (Caronte::checkToken()) {
-                        return Caronte::getUser();
-                    }
-                } catch (\Exception $e) {
-                    return null;
-                }
 
+        Inertia::share('caronte_user', function () {
+            try {
+                if (Caronte::checkToken()) {
+                    return Caronte::getUser();
+                }
+            } catch (\Exception $e) {
                 return null;
-            });
-        }
+            }
+
+            return null;
+        });
     }
 
     /**
