@@ -39,7 +39,6 @@ class ValidateSession
     {
         try {
             $token = Caronte::getToken();
-
             if (PermissionHelper::hasApplication()) {
                 $response = $next($request);
             } else {
