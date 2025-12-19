@@ -28,6 +28,15 @@ class Caronte
         //
     }
 
+    public function checkToken(): bool
+    {
+        $token_str = RouteHelper::isAPI() ? request()->bearerToken() : $this->webToken();
+        if (is_null($token_str) || empty($token_str)) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Retrieve and validate the JWT token from the request or storage.
      *

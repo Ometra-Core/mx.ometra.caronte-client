@@ -14,7 +14,7 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Ometra\Caronte\Caronte;
+use Ometra\Caronte\Facades\Caronte;
 use Ometra\Caronte\Console\Commands\NotifyClientConfigurationCommand;
 use Equidna\Toolkit\Exceptions\ConflictException;
 use Ometra\Caronte\Commands\AttachedRoles;
@@ -30,6 +30,7 @@ use Ometra\Caronte\Commands\ManagementCaronte;
 use Ometra\Caronte\Commands\ManagementRoles;
 use Ometra\Caronte\Commands\ManagementUsers;
 use GuzzleHttp\Promise\Create;
+use Inertia\Inertia;
 
 class CaronteServiceProvider extends ServiceProvider
 {
@@ -145,6 +146,19 @@ class CaronteServiceProvider extends ServiceProvider
                 ManagementCaronte::class,
             ]);
         }
+
+
+        Inertia::share('caronte_user', function () {
+            try {
+                if (Caronte::checkToken()) {
+                    return Caronte::getUser();
+                }
+            } catch (\Exception $e) {
+                return null;
+            }
+
+            return null;
+        });
     }
 
     /**
@@ -156,7 +170,6 @@ class CaronteServiceProvider extends ServiceProvider
     {
         $required = [
             'caronte.URL',
-            'caronte.VERSION',
             'caronte.APP_ID',
             'caronte.APP_SECRET',
             'caronte.LOGIN_URL',
