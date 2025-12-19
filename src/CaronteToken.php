@@ -10,7 +10,7 @@
 
 namespace Ometra\Caronte;
 
-use DateInterval;
+use DateTimeZone;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Lcobucci\Clock\SystemClock;
@@ -21,14 +21,11 @@ use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 use Lcobucci\JWT\Validation\Constraint\StrictValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Ometra\Caronte\Facades\Caronte;
 use Equidna\Toolkit\Exceptions\BadRequestException;
 use Equidna\Toolkit\Exceptions\NotAcceptableException;
 use Equidna\Toolkit\Exceptions\UnprocessableEntityException;
-use DateTimeZone;
-use Exception;
 
 class CaronteToken
 {
@@ -173,11 +170,10 @@ class CaronteToken
      */
     public static function getConstraints(): array
     {
-        $constraints[] = new LooseValidAt(
-            new SystemClock(new DateTimeZone('UTC')),
-            new DateInterval('PT1S')
-        );
         $constraints = [];
+        $constraints[] = new StrictValidAt(
+            new SystemClock(new DateTimeZone('UTC'))
+        );
 
         $config = static::getConfig();
 
