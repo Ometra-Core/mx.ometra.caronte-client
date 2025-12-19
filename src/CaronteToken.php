@@ -189,7 +189,7 @@ class CaronteToken
     {
         $constraints[] = new LooseValidAt(
             new SystemClock(new DateTimeZone('UTC')),
-            new DateInterval('PT30S')
+            new DateInterval('PT1S')
         );
         $constraints = [];
 
