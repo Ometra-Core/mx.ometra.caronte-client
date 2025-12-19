@@ -56,20 +56,6 @@ class CaronteToken
                 $token,
                 ...static::getConstraints()
             );
-        } catch (RequiredConstraintsViolated $e) {
-            throw new NotAcceptableException(
-                'The token does not meet the required constraints: ' . $e->getMessage(),
-                $e
-            );
-        }
-        $timezone = new DateTimeZone('America/Mexico_City');
-        $clock = new SystemClock($timezone);
-
-        try {
-            $config->validator()->assert(
-                $token,
-                new StrictValidAt($clock)
-            );
 
             if (config('caronte.UPDATE_LOCAL_USER')) {
                 Caronte::updateUserData($token->claims()->get('user'));
