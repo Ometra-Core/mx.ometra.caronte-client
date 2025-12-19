@@ -170,7 +170,6 @@ class CaronteServiceProvider extends ServiceProvider
     {
         $required = [
             'caronte.URL',
-            'caronte.VERSION',
             'caronte.APP_ID',
             'caronte.APP_SECRET',
             'caronte.LOGIN_URL',

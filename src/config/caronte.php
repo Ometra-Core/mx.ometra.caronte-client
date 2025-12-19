@@ -9,7 +9,6 @@
 
 return [
     'URL'       => env('CARONTE_URL', ''),
-    'VERSION'   => env('CARONTE_VERSION', 'v2'),
     'TOKEN_KEY' => env('CARONTE_TOKEN_KEY', ''), //!WILL BE DEPRECATED IN FUTURE VERSIONS
 
     'ALLOW_HTTP_REQUESTS'   => env('CARONTE_ALLOW_HTTP_REQUESTS', false),

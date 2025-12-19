@@ -102,7 +102,7 @@ class CaronteToken
                     'Authorization' => 'Bearer ' . $raw_token,
                 ]
             )->post(
-                config('caronte.URL') . 'api/' . config('caronte.VERSION') . '/exchange',
+                config('caronte.URL') . 'api/user/exchange',
                 [
                     'app_id' => config('caronte.APP_ID')
                 ]
@@ -164,7 +164,7 @@ class CaronteToken
      */
     public static function getConfig(): Configuration
     {
-        $signing_key = (config('caronte.VERSION') == 'v1') ? config('caronte.TOKEN_KEY') : config('caronte.APP_SECRET');
+        $signing_key = config('caronte.APP_SECRET');
 
         if (strlen($signing_key) < static::MINIMUM_KEY_LENGTH) {
             $signing_key = str_pad($signing_key, static::MINIMUM_KEY_LENGTH, "\0");
