@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CaronteUser extends Model
 {
-    protected $table      = 'Users';
+    protected $table      = 'CC_Users';
     protected $primaryKey = 'uri_user';
     protected $keyType    = 'string';
 
