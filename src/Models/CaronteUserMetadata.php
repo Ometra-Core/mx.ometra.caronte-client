@@ -23,7 +23,7 @@ class CaronteUserMetadata extends Model
 {
     use HasCompositePrimaryKey;
 
-    protected $table      = 'UsersMetadata';
+    protected $table      = 'CC_UsersMetadata';
     protected $primaryKey = ['uri_user', 'scope', 'key'];
 
     public $timestamps = false;
