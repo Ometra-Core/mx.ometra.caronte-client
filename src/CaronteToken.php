@@ -1,11 +1,14 @@
 <?php
 
 /**
- * @author Gabriel Ruelas
- * @license MIT
- * @version 1.3.2
- * gruelas@gruelasjr
+ * JWT token validation and exchange handler for Caronte authentication.
  *
+ * PHP 8.1+
+ *
+ * @package   Ometra\Caronte
+ * @author    Gabriel Ruelas <gruelas@gruelas.com>
+ * @license   https://opensource.org/licenses/MIT MIT License
+ * @link      https://github.com/Ometra-Core/mx.ometra.caronte-client Documentation
  */
 
 namespace Ometra\Caronte;
@@ -13,6 +16,7 @@ namespace Ometra\Caronte;
 use DateTimeZone;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -27,9 +31,23 @@ use Equidna\Toolkit\Exceptions\BadRequestException;
 use Equidna\Toolkit\Exceptions\NotAcceptableException;
 use Equidna\Toolkit\Exceptions\UnprocessableEntityException;
 
+/**
+ * Handles JWT token validation, decoding, and exchange operations.
+ *
+ * Provides secure token validation with configurable constraints including
+ * signature verification, issuer validation, and expiration checks. Supports
+ * automatic token exchange when tokens expire.
+ *
+ * @author Gabriel Ruelas
+ * @license MIT
+ * @version 1.4.0
+ */
 class CaronteToken
 {
     public const MINIMUM_KEY_LENGTH = 32;
+
+    /** @var bool Prevents infinite recursion during token exchange */
+    private static bool $exchanging = false;
 
     private function __construct()
     {
@@ -39,11 +57,12 @@ class CaronteToken
     /**
      * Validate a JWT token string and return the validated token.
      *
-     * @param string $raw_token Raw JWT token string.
+     * @param  string $raw_token    Raw JWT token string.
+     * @param  bool   $skipExchange Skip automatic token exchange on validation failure.
      * @return Plain Validated token instance.
      * @throws NotAcceptableException|UnprocessableEntityException If the token is invalid or fails constraints.
      */
-    public static function validateToken(string $raw_token): Plain
+    public static function validateToken(string $raw_token, bool $skipExchange = false): Plain
     {
         $config = static::getConfig();
         $token  = static::decodeToken(raw_token: $raw_token);
@@ -60,10 +79,21 @@ class CaronteToken
 
             return $token;
         } catch (RequiredConstraintsViolated $e) {
-            // El objeto $e contiene todas las violaciones a las reglas
-            foreach ($e->violations() as $violation) {
-                echo '- ' . $violation->getMessage() . "\n";
+            // Token validation failed - log violations and attempt exchange
+            if (config('app.debug')) {
+                foreach ($e->violations() as $violation) {
+                    Log::debug('Token constraint violated: ' . $violation->getMessage());
+                }
             }
+
+            // Prevent infinite recursion and respect skipExchange flag
+            if ($skipExchange || self::$exchanging) {
+                throw new UnprocessableEntityException(
+                    'Token validation failed. Please login again.',
+                    previous: $e
+                );
+            }
+
             return static::exchangeToken(raw_token: $raw_token);
         }
     }
@@ -71,33 +101,38 @@ class CaronteToken
     /**
      * Exchange a raw token for a validated token using the Caronte API.
      *
-     * @param string $raw_token Raw JWT token string.
+     * @param  string $raw_token Raw JWT token string.
      * @return Plain Validated token instance.
      * @throws UnprocessableEntityException If the token exchange fails.
      */
     public static function exchangeToken(string $raw_token): Plain
     {
+        // Prevent recursive exchange attempts
+        if (self::$exchanging) {
+            throw new UnprocessableEntityException('Token exchange already in progress');
+        }
+
+        self::$exchanging = true;
+
         try {
-            $caronte_response = Http::withOptions(
-                [
-                    'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
-                ]
-            )->withHeaders(
-                [
-                    'Authorization' => 'Bearer ' . $raw_token,
-                ]
-            )->post(
-                config('caronte.URL') . 'api/user/exchange',
+            $baseUrl = rtrim(config('caronte.URL'), '/');
+
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
+            $caronte_response = Http::withOptions([
+                'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
+            ])->withHeaders([
+                'Authorization' => 'Bearer ' . $raw_token,
+            ])->post(
+                $baseUrl . '/api/user/exchange',
                 [
                     'app_id' => config('caronte.APP_ID')
                 ]
             );
 
-            if ($caronte_response->failed()) {
-                throw new RequestException($caronte_response);
-            }
+            $caronte_response->throw();
 
-            $token = static::validateToken($caronte_response->body());
+            // Validate the exchanged token WITHOUT attempting another exchange
+            $token = static::validateToken($caronte_response->body(), skipExchange: true);
 
             Caronte::saveToken($token->toString());
             Caronte::setTokenWasExchanged();
@@ -107,8 +142,10 @@ class CaronteToken
             Caronte::clearToken();
             throw new UnprocessableEntityException(
                 'Cannot exchange token: ' . $e->getMessage(),
-                $e
+                previous: $e
             );
+        } finally {
+            self::$exchanging = false;
         }
     }
 
@@ -146,13 +183,21 @@ class CaronteToken
      * Get the JWT configuration for token operations.
      *
      * @return Configuration JWT configuration instance.
+     * @throws \RuntimeException If the signing key is too short.
      */
     public static function getConfig(): Configuration
     {
         $signing_key = config('caronte.APP_SECRET');
 
         if (strlen($signing_key) < static::MINIMUM_KEY_LENGTH) {
-            $signing_key = str_pad($signing_key, static::MINIMUM_KEY_LENGTH, "\0");
+            throw new \RuntimeException(
+                sprintf(
+                    'CARONTE_APP_SECRET must be at least %d characters long. Current length: %d. ' .
+                        'Please update your .env file with a secure secret key.',
+                    static::MINIMUM_KEY_LENGTH,
+                    strlen($signing_key)
+                )
+            );
         }
 
         $config = Configuration::forSymmetricSigner(

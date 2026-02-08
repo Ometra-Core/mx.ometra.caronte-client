@@ -3,7 +3,7 @@
 /**
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.3.2
+ * @version 1.4.0
  */
 
 namespace Ometra\Caronte\Models;
@@ -17,11 +17,11 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.1.0
+ * @version 1.4.0
  */
 class CaronteUser extends Model
 {
-    protected $table      = 'CC_Users';
+    protected $table;
     protected $primaryKey = 'uri_user';
     protected $keyType    = 'string';
 
@@ -35,6 +35,15 @@ class CaronteUser extends Model
     ];
 
     protected $hidden = [];
+
+    /**
+     * Initialize the model.
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('caronte.table_prefix', 'CC_') . 'Users';
+    }
 
     /**
      * Get the metadata relationship for the user.

@@ -1,135 +1,156 @@
-# Caronte Client (Laravel package)
+# Caronte Client (Laravel Package)
 
-Caronte Client is a Laravel package that provides distributed authentication middlewares and a set of commands for secure self-management in PHP projects. It allows seamless integration of robust authentication, access control, and management of users and roles, all configurable and extensible within the framework.
-
----
-### Main Use Cases
-
-- Secure user authentication using JWT tokens
-- Fine-grained permission and role management
-- Middleware for session and role validation in Laravel routes
-- Helper utilities for user and permission logic
-- Facade for easy access to authentication features
-- Artisan commands for configuration and environment sync
-- Publishing of config, views, assets, and migrations for customization
-
+Caronte Client is a Laravel package that provides distributed JWT authentication with middleware, role-based access control, and comprehensive user/role management commands for Laravel applications. It connects your application to a centralized Caronte authentication server for secure, scalable multi-tenant authentication.
 
 ---
+
+### Main Features
+
+- **JWT-based authentication** with automatic token renewal
+- **Role-based access control** (RBAC) with fine-grained permissions
+- **Dual authentication model**: User tokens (JWT) + App tokens (API)
+- **Laravel middleware** for session and role validation
+- **Artisan commands** for autonomous user/role management
+- **Inertia.js support** for modern SPA rendering
+- **Configurable table prefix** for multi-tenant deployments
+- **Zero local caching** - all data fetched fresh from server
+
+---
+
 ## 🏁 Quickstart
 
 ## Installation
+
 Install Caronte Client via Composer:
 
 ```bash
-composer require ometra/caronte-client:@dev
+composer require ometra/caronte-client
 ```
+
+### Publish Assets (Optional)
+
+Publish configuration, views, and migrations as needed:
+
+```bash
+# Publish config file
+php artisan vendor:publish --tag=caronte:config
+
+# Publish views (for customization)
+php artisan vendor:publish --tag=caronte:views
+
+# Publish migrations (if UPDATE_LOCAL_USER=true)
+php artisan vendor:publish --tag=caronte:migrations
+php artisan migrate
+```
+
 ---
 
 ## Configuration
 
-Add the following environment variables to your `.env` file and adjust them according to your project needs:
+The Caronte Client package is designed to minimize `.env` pollution. **Only authentication secrets** need to be defined in the host application's `.env`. All other settings have sensible defaults in the package's config file.
 
-| Variable                        | Example Value                      | Description                                                      |
-|----------------------------------|------------------------------------|------------------------------------------------------------------|
-| `CARONTE_URL`                   | `http://caronte.test/`             | FQDN of the Caronte server for authentication                    |
-| `CARONTE_TOKEN_KEY`             | *(required if applicable)*         | Symmetric key for authentication                                 |
-| `CARONTE_ALLOW_HTTP_REQUESTS`   | `false`                            | Allow HTTP requests (not recommended in production)              |
-| `CARONTE_ISSUER_ID`             | `net.example`                      | Issuer ID                                                        |
-| `CARONTE_ENFORCE_ISSUER`        | `true`                             | Enforce strict issuer validation                                 |
-| `CARONTE_APP_ID`                | `net.example`                      | Registered application ID                                        |
-| `CARONTE_APP_SECRET`            | `OgNy19Z...`                       | Registered application secret                                    |
-| `CARONTE_2FA`                   | `false`                            | Enable two-factor authentication                                 |
-| `CARONTE_ROUTES_PREFIX`         | *(optional)*                       | Prefix for protected routes                                      |
-| `CARONTE_SUCCESS_URL`           | `/`                                | Redirect URL after authentication                                |
-| `CARONTE_LOGIN_URL`             | `/login`                           | Login route                                                      |
-| `CARONTE_UPDATE_USER`           | `false`                            | Update users in local DB (requires migration)                    |
-| `CARONTE_TOKEN_TTL`             | `460`                              | Token time-to-live (in seconds)                                                
+### Required Environment Variables (Secrets)
 
-#### Real-world configuration example
+Add **only these** to your application's `.env`:
 
-CARONTE_URL=http://caronte.test/
-CARONTE_ALLOW_HTTP_REQUESTS=false
-CARONTE_ISSUER_ID=net.example
-CARONTE_ENFORCE_ISSUER=true
-CARONTE_APP_ID=net.example
-CARONTE_APP_SECRET="OgNy19ZMRLXBsuAwTQSbpbzUkpE626N1SUfaeygE"
-CARONTE_2FA=false
-CARONTE_ROUTES_PREFIX=""
-CARONTE_SUCCESS_URL="/"
-CARONTE_LOGIN_URL="/login"
-CARONTE_UPDATE_USER=false
-APP_TIMEZONE=America/Mexico_City
-CARONTE_TOKEN_TTL=460### Migrations (optional)
+| Variable             | Example Value                 | Description                   |
+| -------------------- | ----------------------------- | ----------------------------- |
+| `CARONTE_URL`        | `https://caronte.example.com` | FQDN of Caronte server        |
+| `CARONTE_APP_ID`     | `app.example.com`             | Registered application ID     |
+| `CARONTE_APP_SECRET` | `OgNy19ZMRLXBsuAwTQSbpbzU...` | Registered application secret |
 
-If you want to enable user synchronization (`CARONTE_UPDATE_USER=true`), run the migrations:
-php artisan migrate---
+### Optional Environment Variables
+
+These can be overridden if needed, but have defaults in `config/caronte.php`:
+
+| Variable                 | Default Value | Description                            |
+| ------------------------ | ------------- | -------------------------------------- |
+| `CARONTE_ISSUER_ID`      | `''`          | JWT issuer ID (if ENFORCE_ISSUER=true) |
+| `CARONTE_ENFORCE_ISSUER` | `true`        | Enforce strict issuer validation       |
+
+### Non-Environment Configuration (Defaults)
+
+These settings are configured in `config/caronte.php` with sensible defaults:
+
+- `USE_2FA`: `false` - Enable two-factor authentication
+- `ALLOW_HTTP_REQUESTS`: `false` - Disable SSL verification (dev only)
+- `ROUTES_PREFIX`: `''` - Prefix for Caronte routes
+- `SUCCESS_URL`: `'/'` - Post-login redirect
+- `LOGIN_URL`: `'/login'` - Login route path
+- `UPDATE_LOCAL_USER`: `false` - Sync users to local database
+- `USE_INERTIA`: `false` - Enable Inertia.js rendering
+- `table_prefix`: `'CC_'` - Database table prefix (for migrations)
+
+To customize any of these, publish the config:
+
+```bash
+php artisan vendor:publish --tag=caronte:config
+```
+
+### Migrations (Optional)
+
+If you enable local user synchronization (`UPDATE_LOCAL_USER=true`), publish and run migrations:
+
+```bash
+php artisan vendor:publish --tag=caronte:migrations
+php artisan migrate
+```
+
 ---
+
 # 🛠 Available Commands
 
-This package includes artisan commands (prefix `caronte-client`) for administration and management directly from the console for the autonomous administration of each system
+This package includes Artisan commands (prefix `caronte-client:`) for autonomous administration of users and roles.
 
-##### **🟢 Main Entry Point**
+### 🟢 Main Entry Point
 
-`php artisan caronte-client:management`
-Interactive menu to manage **Users** and **Roles** via wizard. 
-From here, operations are divided into two main branches: **Role Management** and **User Management**. 
+```bash
+php artisan caronte-client:management
+```
 
-##### 🛡 1. Role Management
+Interactive wizard to manage **Users** and **Roles**. Operations are divided into two branches:
 
-Manage the definitions of roles within the application scope.
-
-
-| Name  | Command  | Description  |   
-|---|---|---|
-| *create role*  | `php artisan caronte-client:create-role`  | Create a new role  |
-| **manage an existing role**  | `php artisan caronte-client:management-roles`  | Management of existing roles  |
-| *view existing roles*  | `php artisan caronte-client:show-roles`  | List existing roles  |
-
-**Commands for the CRUD of roles**
-
-| Name  | Command  | Description  |   
-|---|---|---|
-| *edit role*  | `php artisan caronte-client:create-role {uri_rol}`  | Update the  description of a role  |
-| *delete a role*  | `php artisan caronte-client:delete-role {uri_rol}`  | Delete a role  |
-
-
-#### 👥 2. User Management & Workflow
-
-User management allows for full CRUD operations, but strict rules apply to ensure data integrity within the application context.
-
-> [!IMPORTANT] **⚠️ Dependency Warning: Link Roles First**
-> 
-> To perform specific operations on a user (like updating details or managing their roles), the user **MUST** be linked to the application first.
-> 
-> **The Flow:**
-> 
-> 1.  User exists in the system.
->     
-> 2.  **Execute `caronte-client:attached-roles`** to link an App Role to the user.
->     
-> 3.  Now you can use `update-user`, `delete-roles-user`, etc.
-
-| Name  | Command  | Description  |   
-|---|---|---|
-| *create user*  | `php artisan caronte-client:create-user`  | Create a user  |
-| **manage an existing user**  | `php artisan caronte-client:management-users`  | Managing an existing user  |
-| **attached roles to a user**  | `php artisan caronte-client:attached-roles`  | Attached roles an existing user  |
-
-**Commands for the management users**
-First of all, the user is searched for and selected, then it is managed. 
-`Note: It is very important to take into account the aforementioned workflow`
-
-| Name  | Command  | Description  |   
-|---|---|---|
-| *edit user*  | `php artisan caronte-client:update-user {uri_user} {name_user}`  | Update the  name of a user  |
-| **delete roles associated with the user**  | `php artisan caronte-client:delete-roles-user {uri_user} {name_user}`  | Removes app roles that belong to the user  |
-| *show roles in the application*  | `php artisan caronte-client:users-roles {uri_user}`  | Show Roles attached by user within the application  |
-
-**Options to revoke roles**
-__There are two options: select a specific role to remove or remove all roles associated with the user in the application__
 ---
+
+## 🛡 Role Management
+
+Manage role definitions within your application scope.
+
+| Command                                       | Description                 |
+| --------------------------------------------- | --------------------------- |
+| `php artisan caronte-client:create-role`      | Create a new role           |
+| `php artisan caronte-client:update-role`      | Update role description     |
+| `php artisan caronte-client:delete-role`      | Delete a role               |
+| `php artisan caronte-client:show-roles`       | List all roles              |
+| `php artisan caronte-client:management-roles` | Interactive role management |
+
+---
+
+## 👥 User Management
+
+> **⚠️ Important Workflow**
+>
+> To manage a user's roles, the user **MUST** first be linked to the application:
+>
+> 1. User exists in system
+> 2. Run `caronte-client:attach-roles` to link roles
+> 3. Then use update/delete operations
+
+| Command                                        | Description                          |
+| ---------------------------------------------- | ------------------------------------ |
+| `php artisan caronte-client:create-user`       | Create a new user                    |
+| `php artisan caronte-client:update-user`       | Update user details                  |
+| `php artisan caronte-client:delete-user-roles` | Remove roles from user               |
+| `php artisan caronte-client:show-user-roles`   | Show user's assigned roles           |
+| `php artisan caronte-client:attach-roles`      | Link roles to user (required first!) |
+| `php artisan caronte-client:management-users`  | Interactive user management          |
+
+---
+
 ## Usage Examples
+
 ### Authenticating Users
+
 ```php
 use Caronte;
 // Retrieve the current JWT token
@@ -137,6 +158,7 @@ $token = Caronte::getToken();
 // Get the authenticated user object from the token
 $user = Caronte::getUser();
 ```
+
 ### Middleware Integration
 
 Add Caronte middleware to your routes for session and role validation:
@@ -155,9 +177,11 @@ Route::middleware(['Caronte.ValidateRoles:administrator,manager'])->group(functi
     });
 });
 ```
+
 ### Permission Checks in Code
+
 ```php
-use Equidna\Caronte\Helpers\PermissionHelper;
+use Ometra\Caronte\Helpers\PermissionHelper;
 // Check if the user has access to the application
 if (PermissionHelper::hasApplication()) {
     // User has access

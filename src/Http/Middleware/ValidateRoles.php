@@ -3,7 +3,7 @@
 /**
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.3.2
+ * @version 1.4.0
  *
  */
 
@@ -23,7 +23,7 @@ use Closure;
  *
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.3.1
+ * @version 1.4.0
  */
 class ValidateRoles
 {
@@ -40,7 +40,7 @@ class ValidateRoles
         try {
             if (!PermissionHelper::hasRoles(roles: $roles)) {
                 return ResponseHelper::forbidden(
-                    message: 'User does not have access access to this feature',
+                    message: 'User does not have access to this feature',
                     errors: [
                         'User does not have the required roles: ' . implode(', ', $roles)
                     ],
