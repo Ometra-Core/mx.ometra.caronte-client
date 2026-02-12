@@ -3,7 +3,7 @@
 /**
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.3.2
+ * @version 1.4.0
  */
 
 namespace Ometra\Caronte\Models;
@@ -17,13 +17,17 @@ use Equidna\Toolkit\Traits\Database\HasCompositePrimaryKey;
  *
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.1.0
+ * @version 1.4.0
  */
 class CaronteUserMetadata extends Model
 {
     use HasCompositePrimaryKey;
 
+<<<<<<< HEAD
     protected $table      = 'CC_UsersMetadata';
+=======
+    protected $table;
+>>>>>>> main
     protected $primaryKey = ['uri_user', 'scope', 'key'];
 
     public $timestamps = false;
@@ -34,6 +38,15 @@ class CaronteUserMetadata extends Model
         'value',
         'scope'
     ];
+
+    /**
+     * Initialize the model.
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('caronte.table_prefix', 'CC_') . 'UsersMetadata';
+    }
 
     /**
      * Get the user relationship for this metadata.

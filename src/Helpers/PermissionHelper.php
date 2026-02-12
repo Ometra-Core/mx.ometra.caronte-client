@@ -3,14 +3,13 @@
 /**
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.3.2
+ * @version 1.4.0
  *
  */
 
 namespace Ometra\Caronte\Helpers;
 
 use Ometra\Caronte\Facades\Caronte;
-use Equidna\Toolkit\Exceptions\UnauthorizedException;
 
 class PermissionHelper
 {

@@ -1,11 +1,14 @@
 <?php
 
 /**
- * @author Gabriel Ruelas
- * @license MIT
- * @version 1.3.2
- * gruelas@gruelasjr
+ * Service provider for Caronte Client package registration and bootstrapping.
  *
+ * PHP 8.1+
+ *
+ * @package   Ometra\Caronte\Providers
+ * @author    Gabriel Ruelas <gruelas@gruelas.com>
+ * @license   https://opensource.org/licenses/MIT MIT License
+ * @link      https://github.com/Ometra-Core/mx.ometra.caronte-client Documentation
  */
 
 namespace Ometra\Caronte\Providers;
@@ -14,6 +17,7 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+<<<<<<< HEAD
 use Ometra\Caronte\Facades\Caronte;
 use Ometra\Caronte\Console\Commands\NotifyClientConfigurationCommand;
 use Equidna\Toolkit\Exceptions\ConflictException;
@@ -31,9 +35,36 @@ use Ometra\Caronte\Commands\ManagementRoles;
 use Ometra\Caronte\Commands\ManagementUsers;
 use GuzzleHttp\Promise\Create;
 use Inertia\Inertia;
+=======
+
+use Equidna\Toolkit\Exceptions\ConflictException;
+use Inertia\Inertia;
+
+use Ometra\Caronte\Console\Commands\AttachRoles;
+use Ometra\Caronte\Console\Commands\ManagementCaronte;
+use Ometra\Caronte\Console\Commands\ManagementRoles;
+use Ometra\Caronte\Console\Commands\ManagementUsers;
+use Ometra\Caronte\Console\Commands\Roles\CreateRole;
+use Ometra\Caronte\Console\Commands\Roles\DeleteRole;
+use Ometra\Caronte\Console\Commands\Roles\ShowRoles;
+use Ometra\Caronte\Console\Commands\Roles\UpdateRole;
+use Ometra\Caronte\Console\Commands\Users\CreateUser;
+use Ometra\Caronte\Console\Commands\Users\DeleteRolesUser;
+use Ometra\Caronte\Console\Commands\Users\ShowRolesByUser;
+use Ometra\Caronte\Console\Commands\Users\UpdateUser;
+use Ometra\Caronte\Facades\Caronte;
+use Ometra\Caronte\Helpers\PermissionHelper;
+use Ometra\Caronte\Http\Middleware\ValidateRoles;
+use Ometra\Caronte\Http\Middleware\ValidateSession;
+>>>>>>> main
 
 class CaronteServiceProvider extends ServiceProvider
 {
+    /**
+     * Registers package services and merges configuration.
+     *
+     * @return void
+     */
     public function register()
     {
         $this->app->singleton(
@@ -41,64 +72,54 @@ class CaronteServiceProvider extends ServiceProvider
             fn() => new Caronte()
         );
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/caronte.php', 'caronte');
-        $this->mergeConfigFrom(__DIR__ . '/../config/caronte-roles.php', 'caronte-roles');
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/caronte-jobs.php',
-            'caronte-jobs'
-        );
+        $this->mergeConfigFrom(__DIR__ . '/../../config/caronte.php', 'caronte');
     }
 
+    /**
+     * Boots package resources, routes, and publishable assets.
+     *
+     * @param  Router $router  Router instance for registering middleware aliases.
+     * @return void
+     * @throws ConflictException  When required configuration values are missing.
+     */
     public function boot(Router $router)
     {
         $this->validateCaronteConfig();
 
         //Registers the Caronte alias and facade.
         $loader = AliasLoader::getInstance();
-        $loader->alias('Caronte', \Ometra\Caronte\Facades\Caronte::class);
-        $loader->alias('PermissionHelper', \Ometra\Caronte\Helpers\PermissionHelper::class);
+        $loader->alias('Caronte', Caronte::class);
+        $loader->alias('PermissionHelper', PermissionHelper::class);
 
         //Registers the middleware
-        $router->aliasMiddleware('Caronte.ValidateSession', \Ometra\Caronte\Http\Middleware\ValidateSession::class);
-        $router->aliasMiddleware('Caronte.ValidateRoles', \Ometra\Caronte\Http\Middleware\ValidateRoles::class);
+        $router->aliasMiddleware('Caronte.ValidateSession', ValidateSession::class);
+        $router->aliasMiddleware('Caronte.ValidateRoles', ValidateRoles::class);
 
         //Registers the base Routes for clients
         Route::prefix(config('caronte.ROUTES_PREFIX'))->middleware(['web'])->group(
             function () {
-                $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+                $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
             }
         );
 
-        // Registers the API Routes for the package
-        Route::prefix('api/' . config('caronte.ROUTES_PREFIX'))->middleware(['api'])->group(
-            function () {
-                $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
-            }
-        );
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'caronte');
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'caronte');
-        $this->loadMigrationsFrom(__DIR__ . '/../migrations');
-
-        //Config for roles
+        //Config
         $this->publishes(
             [
-                __DIR__ . '/../config/caronte-roles.php' => config_path('caronte-roles.php'),
+                __DIR__ . '/../../config/caronte.php' => config_path('caronte.php'),
             ],
             [
-                'caronte:roles',
+                'caronte:config',
                 'caronte',
             ]
         );
 
-        //Jobs
-        $this->publishes([
-            __DIR__ . '/../config/caronte-jobs.php' => config_path('caronte-jobs.php'),
-        ], 'caronte-jobs');
-
         //Views
         $this->publishes(
             [
-                __DIR__ . '/../resources/views' => resource_path('views/vendor/caronte'),
+                __DIR__ . '/../../resources/views' => resource_path('views/vendor/caronte'),
             ],
             [
                 'caronte:views',
@@ -109,10 +130,24 @@ class CaronteServiceProvider extends ServiceProvider
         //Assets
         $this->publishes(
             [
-                __DIR__ . '/../resources/assets' => public_path('vendor/caronte'),
+                __DIR__ . '/../../resources/assets' => public_path('vendor/caronte'),
             ],
             [
                 'caronte-assets',
+<<<<<<< HEAD
+=======
+                'caronte',
+            ]
+        );
+
+        //Inertia
+        $this->publishes(
+            [
+                __DIR__ . '/../../resources/js' => resource_path('js/vendor/caronte'),
+            ],
+            [
+                'caronte:inertia',
+>>>>>>> main
                 'caronte',
             ]
         );
@@ -120,7 +155,7 @@ class CaronteServiceProvider extends ServiceProvider
         //Migrations
         $this->publishes(
             [
-                __DIR__ . '/../migrations' => database_path('migrations'),
+                __DIR__ . '/../../database/migrations' => database_path('migrations'),
             ],
             [
                 'caronte:migrations',
@@ -131,8 +166,7 @@ class CaronteServiceProvider extends ServiceProvider
         //Commands
         if ($this->app->runningInConsole()) {
             $this->commands([
-                NotifyClientConfigurationCommand::class,
-                AttachedRoles::class,
+                AttachRoles::class,
                 ManagementRoles::class,
                 ManagementUsers::class,
                 CreateRole::class,
@@ -164,7 +198,7 @@ class CaronteServiceProvider extends ServiceProvider
     /**
      * Validates required Caronte config values and fails early with a clear message.
      *
-     * @throws \RuntimeException
+     * @throws ConflictException  When one or more required config values are missing.
      */
     protected function validateCaronteConfig(): void
     {

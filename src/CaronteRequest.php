@@ -5,7 +5,7 @@
  *
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.3.2
+ * @version 1.4.0
  */
 
 namespace Ometra\Caronte;
@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Contracts\View\View;
+use Inertia\Response as InertiaResponse;
 use Equidna\Toolkit\Helpers\RouteHelper;
 use Equidna\Toolkit\Helpers\ResponseHelper;
 use Ometra\Caronte\Facades\Caronte;
@@ -52,6 +53,7 @@ class CaronteRequest
         }
 
         try {
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
@@ -100,6 +102,7 @@ class CaronteRequest
     public static function twoFactorTokenRequest(Request $request): JsonResponse|RedirectResponse
     {
         try {
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
@@ -150,6 +153,7 @@ class CaronteRequest
         }
 
         try {
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
@@ -196,6 +200,7 @@ class CaronteRequest
     public static function passwordRecoverRequest(Request $request): JsonResponse|RedirectResponse
     {
         try {
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
@@ -231,12 +236,13 @@ class CaronteRequest
      * Validate a password recovery token.
      *
      * @param string $token Password recovery token.
-     * @return JsonResponse|View API response or view.
+     * @return JsonResponse|View|InertiaResponse API response or view.
      * @throws UnauthorizedException If validation fails.
      */
-    public static function passwordRecoverTokenValidation(string $token): JsonResponse|View
+    public static function passwordRecoverTokenValidation(string $token): JsonResponse|View|InertiaResponse
     {
         try {
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
@@ -266,7 +272,18 @@ class CaronteRequest
 
         $token_response = json_decode($response);
 
-        return View('caronte::password-recover')->with(['user' => $token_response->user]);
+        if (config('caronte.USE_INERTIA')) {
+            return inertia('auth/password-recover', [
+                'user' => $token_response->user,
+                'callback_url' => request()->get('callback_url'),
+                'csrf_token' => csrf_token(),
+                'routes' => [
+                    'passwordRecoverSubmit' => url()->current(),
+                ],
+            ]);
+        }
+
+        return View('caronte::auth.password-recover')->with(['user' => $token_response->user]);
     }
 
     /**
@@ -280,6 +297,7 @@ class CaronteRequest
     public static function passwordRecover(Request $request, string $token): JsonResponse|RedirectResponse
     {
         try {
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
@@ -321,6 +339,7 @@ class CaronteRequest
     public static function logout(bool $logout_all_sessions = false): JsonResponse|RedirectResponse
     {
         try {
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
@@ -354,6 +373,7 @@ class CaronteRequest
         );
     }
 
+<<<<<<< HEAD
     /**
      * Notify the Caronte server of the current client configuration and roles.
      *
@@ -382,10 +402,13 @@ class CaronteRequest
         return $caronte_response->body();
     }
 
+=======
+>>>>>>> main
     public static function setMetadata(Request $request): JsonResponse|RedirectResponse
     {
         try {
             $token = base64_encode(sha1(config('caronte.APP_ID')) . ':' . config('caronte.APP_SECRET'));
+            /** @var \Illuminate\Http\Client\Response $caronte_response */
             $caronte_response = HTTP::withOptions(
                 [
                     'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')

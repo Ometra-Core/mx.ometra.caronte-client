@@ -3,7 +3,7 @@
 /**
  * @author Gabriel Ruelas
  * @license MIT
- * @version 1.3.2
+ * @version 1.4.0
  */
 
 namespace Ometra\Caronte;
@@ -203,12 +203,12 @@ class Caronte
                     ],
                     [
                         'value'     => $metadata->value,
-                        'scope'     => $metadata->scope ?: config('carone.APP_ID')
+                        'scope'     => $metadata->scope ?: config('caronte.APP_ID')
                     ]
                 );
             }
         } catch (Exception $e) {
-            // If this error exists it's beacuse the users migration was not run
+            // If this error exists it's because the users migration was not run
             // No need to log it, just ignore it
         }
     }

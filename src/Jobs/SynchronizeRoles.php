@@ -2,7 +2,7 @@
 
 namespace Ometra\Caronte\Jobs;
 
-use Ometra\Caronte\AppBound;
+use Ometra\Caronte\CaronteRoleManager;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Exception;
@@ -26,7 +26,7 @@ class SynchronizeRoles implements ShouldQueue
     public function handle()
     {
         try {
-            AppBound::initializeSettings();
+            CaronteRoleManager::getRoles();
         } catch (Exception $e) {
             throw new NotFoundException(message: 'job failed: ' . $e->getMessage());
         }
