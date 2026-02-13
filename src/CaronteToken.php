@@ -13,6 +13,7 @@
 
 namespace Ometra\Caronte;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -86,6 +87,28 @@ class CaronteToken
                 }
             }
 
+            foreach ($e->violations() as $violation) {
+                if (str_contains(strtolower($violation->getMessage()), 'issued in the future')) {
+                    $issuedAt = $token->claims()->get('iat');
+                    if ($issuedAt instanceof DateTimeImmutable) {
+                        $nowUtc     = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+                        $skew       = $issuedAt->getTimestamp() - $nowUtc->getTimestamp();
+                        $skewHuman  = $skew >= 0 ? '+' . $skew : (string) $skew;
+
+                        Log::warning(
+                            'JWT clock skew detected (iat is in the future).',
+                            [
+                                'iat'           => $issuedAt->format('c'),
+                                'server_time'   => $nowUtc->format('c'),
+                                'skew_seconds'  => $skewHuman,
+                            ]
+                        );
+                    }
+
+                    break;
+                }
+            }
+
             // Prevent infinite recursion and respect skipExchange flag
             if ($skipExchange || self::$exchanging) {
                 throw new UnprocessableEntityException(
@@ -115,18 +138,6 @@ class CaronteToken
         self::$exchanging = true;
 
         try {
-<<<<<<< HEAD
-            $caronte_response = Http::withOptions(
-                [
-                    'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
-                ]
-            )->withHeaders(
-                [
-                    'Authorization' => 'Bearer ' . $raw_token,
-                ]
-            )->post(
-                config('caronte.URL') . 'api/user/exchange',
-=======
             $baseUrl = rtrim(config('caronte.URL'), '/');
 
             /** @var \Illuminate\Http\Client\Response $caronte_response */
@@ -136,7 +147,6 @@ class CaronteToken
                 'Authorization' => 'Bearer ' . $raw_token,
             ])->post(
                 $baseUrl . '/api/user/exchange',
->>>>>>> main
                 [
                     'app_id' => config('caronte.APP_ID')
                 ]
