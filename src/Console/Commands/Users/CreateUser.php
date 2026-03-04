@@ -13,7 +13,7 @@
 
 namespace Ometra\Caronte\Console\Commands\Users;
 
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
 use Illuminate\Console\Command;
 
 class CreateUser extends Command
@@ -37,7 +37,7 @@ class CreateUser extends Command
             }
         } while ($password != $password_confirmation);
 
-        $response = RoleApiClient::createUser(name: $name, email: $email, password: $password, password_confirmation: $password_confirmation);
+        $response = ClientApi::createUser(name: $name, email: $email, password: $password, password_confirmation: $password_confirmation);
 
         if (!$response['success']) {
             $this->error("Error al crear el usuario: " . $response['error']);

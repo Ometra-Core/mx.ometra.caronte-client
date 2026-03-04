@@ -17,30 +17,9 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-<<<<<<< HEAD
-use Ometra\Caronte\Facades\Caronte;
-use Ometra\Caronte\Console\Commands\NotifyClientConfigurationCommand;
-use Equidna\Toolkit\Exceptions\ConflictException;
-use Ometra\Caronte\Commands\AttachedRoles;
-use Ometra\Caronte\Commands\CrudRoles\CreateRole;
-use Ometra\Caronte\Commands\CrudUsers\CreateUser;
-use Ometra\Caronte\Commands\CrudRoles\DeleteRole;
-use Ometra\Caronte\Commands\CrudRoles\ShowRoles;
-use Ometra\Caronte\Commands\CrudRoles\UpdateRole;
-use Ometra\Caronte\Commands\CrudUsers\DeleteRolesUser;
-use Ometra\Caronte\Commands\CrudUsers\UpdateUser;
-use Ometra\Caronte\Commands\CrudUsers\ShowRolesByUser;
-use Ometra\Caronte\Commands\ManagementCaronte;
-use Ometra\Caronte\Commands\ManagementRoles;
-use Ometra\Caronte\Commands\ManagementUsers;
-use GuzzleHttp\Promise\Create;
-use Inertia\Inertia;
-=======
-
 use Equidna\Toolkit\Exceptions\ConflictException;
 use Inertia\Inertia;
 
-use Ometra\Caronte\Console\Commands\AttachRoles;
 use Ometra\Caronte\Console\Commands\ManagementCaronte;
 use Ometra\Caronte\Console\Commands\ManagementRoles;
 use Ometra\Caronte\Console\Commands\ManagementUsers;
@@ -48,6 +27,7 @@ use Ometra\Caronte\Console\Commands\Roles\CreateRole;
 use Ometra\Caronte\Console\Commands\Roles\DeleteRole;
 use Ometra\Caronte\Console\Commands\Roles\ShowRoles;
 use Ometra\Caronte\Console\Commands\Roles\UpdateRole;
+use Ometra\Caronte\Console\Commands\Users\AttachRoles;
 use Ometra\Caronte\Console\Commands\Users\CreateUser;
 use Ometra\Caronte\Console\Commands\Users\DeleteRolesUser;
 use Ometra\Caronte\Console\Commands\Users\ShowRolesByUser;
@@ -56,7 +36,6 @@ use Ometra\Caronte\Facades\Caronte;
 use Ometra\Caronte\Helpers\PermissionHelper;
 use Ometra\Caronte\Http\Middleware\ValidateRoles;
 use Ometra\Caronte\Http\Middleware\ValidateSession;
->>>>>>> main
 
 class CaronteServiceProvider extends ServiceProvider
 {
@@ -134,8 +113,6 @@ class CaronteServiceProvider extends ServiceProvider
             ],
             [
                 'caronte-assets',
-<<<<<<< HEAD
-=======
                 'caronte',
             ]
         );
@@ -147,7 +124,6 @@ class CaronteServiceProvider extends ServiceProvider
             ],
             [
                 'caronte:inertia',
->>>>>>> main
                 'caronte',
             ]
         );

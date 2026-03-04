@@ -13,7 +13,7 @@
 
 namespace Ometra\Caronte\Console\Commands\Users;
 
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
 use Illuminate\Console\Command;
 
 class UpdateUser extends Command
@@ -26,7 +26,7 @@ class UpdateUser extends Command
         $uri_user = $this->argument('uri_user');
         $name_user = $this->argument('name_user');
         $newName = $this->ask('Escribe el nuevo nombre del usuario:');
-        $response = RoleApiClient::updateUser(uri_user: $uri_user, name: $newName);
+        $response = ClientApi::updateUser(uri_user: $uri_user, name: $newName);
         if (!$response['success']) {
             $this->error("Error al actualizar el usuario: " . $response['error']);
             return 1;

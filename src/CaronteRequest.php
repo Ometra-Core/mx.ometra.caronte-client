@@ -373,37 +373,6 @@ class CaronteRequest
         );
     }
 
-<<<<<<< HEAD
-    /**
-     * Notify the Caronte server of the current client configuration and roles.
-     *
-     * @return string Response body from the Caronte server.
-     * @throws RequestException If the request fails.
-     */
-    public static function notifyClientConfiguration(): string
-    {
-        $caronte_response = HTTP::withOptions(
-            [
-                'verify' => !config('caronte.ALLOW_HTTP_REQUESTS')
-            ]
-        )->withHeaders(
-            [
-                'Authorization' => "Bearer " . base64_encode(sha1(config('caronte.APP_ID')) . ':' . config('caronte.APP_SECRET'))
-            ]
-        )->post(
-            url: config('caronte.URL') . 'api/A3/client-configuration',
-            data: config('caronte-roles')
-        );
-
-        if ($caronte_response->failed()) {
-            throw new RequestException($caronte_response);
-        }
-
-        return $caronte_response->body();
-    }
-
-=======
->>>>>>> main
     public static function setMetadata(Request $request): JsonResponse|RedirectResponse
     {
         try {

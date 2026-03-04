@@ -15,7 +15,8 @@ namespace Ometra\Caronte\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
+use Ometra\Caronte\Api\RoleApi;
 
 /**
  * Handles role operations and user-role association/disassociation.
@@ -33,7 +34,7 @@ class RoleController extends BaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $response = RoleApiClient::showRoles();
+        $response = RoleApi::showRoles();
 
         return response()->json($response);
     }
@@ -47,7 +48,7 @@ class RoleController extends BaseController
      */
     public function listByUser(Request $request, string $uri_user): JsonResponse
     {
-        $response = RoleApiClient::showUserRoles(uri_user: $uri_user);
+        $response = ClientApi::showUserRoles(uri_user: $uri_user);
 
         return response()->json($response);
     }
@@ -63,7 +64,7 @@ class RoleController extends BaseController
         $uri_user = $request->input('uri_user');
         $uri_rol  = $request->input('uri_rol');
 
-        $response = RoleApiClient::assignRoleToUser(uriUser: $uri_user, uriApplicationRole: $uri_rol);
+        $response = ClientApi::assignRoleToUser(uriUser: $uri_user, uriApplicationRole: $uri_rol);
 
         if (!$response['success']) {
             return redirect()
@@ -90,11 +91,11 @@ class RoleController extends BaseController
         $uri_rol  = $request->input('uri_rol');
 
         if ($request->input('allRoles')) {
-            $roles = RoleApiClient::showUserRoles(uri_user: $uri_user);
+            $roles = ClientApi::showUserRoles(uri_user: $uri_user);
             $roles = json_decode($roles['data'], true);
 
             foreach ($roles as $role) {
-                $response = RoleApiClient::deleteUserRole(
+                $response = ClientApi::deleteUserRole(
                     uri_user: $uri_user,
                     uri_applicationRole: $role['uri_applicationRole']
                 );
@@ -110,7 +111,7 @@ class RoleController extends BaseController
                 ->back()
                 ->with('success', 'Todos los roles eliminados correctamente.');
         } else {
-            $response = RoleApiClient::deleteUserRole(
+            $response = ClientApi::deleteUserRole(
                 uri_user: $uri_user,
                 uri_applicationRole: $uri_rol
             );
@@ -140,7 +141,7 @@ class RoleController extends BaseController
             'description' => 'nullable|string|max:500',
         ]);
 
-        $response = RoleApiClient::createRole(
+        $response = RoleApi::createRole(
             name: $request->input('name'),
             description: $request->input('description', ''),
         );
@@ -169,7 +170,7 @@ class RoleController extends BaseController
             'description' => 'nullable|string|max:500',
         ]);
 
-        $response = RoleApiClient::updateRole(
+        $response = RoleApi::updateRole(
             uriApplicationRole: $request->input('uri_role'),
             description: $request->input('description', ''),
         );
@@ -197,7 +198,7 @@ class RoleController extends BaseController
             'uri_role' => 'required|string',
         ]);
 
-        $response = RoleApiClient::deleteRole(
+        $response = RoleApi::deleteRole(
             uriApplicationRole: $request->input('uri_role'),
         );
 

@@ -13,11 +13,7 @@
 </head>
 
 <body>
-<<<<<<< HEAD:src/resources/views/base.blade.php
-    @include('caronte::messages')
-=======
     @include('caronte::partials.messages')
->>>>>>> main:resources/views/layouts/base.blade.php
     <main role="main">
         @yield('content')
     </main>
@@ -27,10 +23,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('vendor/caronte/js/caronte-management/create.js') }}"></script>
-<<<<<<< HEAD:src/resources/views/base.blade.php
-=======
 <script src="{{ asset('vendor/caronte/js/caronte-management/roles.js') }}"></script>
->>>>>>> main:resources/views/layouts/base.blade.php
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {

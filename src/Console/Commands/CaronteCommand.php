@@ -14,7 +14,6 @@
 namespace Ometra\Caronte\Console\Commands;
 
 use Illuminate\Console\Command;
-use Ometra\Caronte\CaronteRoleManager;
 
 abstract class CaronteCommand extends Command
 {

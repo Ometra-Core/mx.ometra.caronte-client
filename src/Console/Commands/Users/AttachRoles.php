@@ -5,16 +5,16 @@
  *
  * PHP 8.1+
  *
- * @package   Ometra\Caronte\Console\Commands
+ * @package   Ometra\Caronte\Console\Commands\Users
  * @author    Gabriel Ruelas <gruelas@gruelas.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  * @link      https://github.com/Ometra-Core/mx.ometra.caronte-client Documentation
  */
 
-namespace Ometra\Caronte\Console\Commands;
+namespace Ometra\Caronte\Console\Commands\Users;
 
 use Ometra\Caronte\Console\Commands\CaronteCommand;
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
 use Ometra\Caronte\CaronteRoleManager;
 
 class AttachRoles extends CaronteCommand
@@ -24,7 +24,7 @@ class AttachRoles extends CaronteCommand
 
     public function executeCommand()
     {
-        $response = RoleApiClient::showUsers(paramSearch: '');
+        $response = ClientApi::showUsers(paramSearch: '');
         $users = json_decode($response['data'], true);
 
         if (empty($users)) {
@@ -80,7 +80,7 @@ class AttachRoles extends CaronteCommand
         $this->info("Has seleccionado: {$selectedRol['name']}");
 
         if ($this->confirm("Seguro que deseas asignar el rol <<{$selectedRol['name']}>> al usuario: {$userSelect['name']}?")) {
-            $response = RoleApiClient::assignRoleToUser(
+            $response = ClientApi::assignRoleToUser(
                 uriUser: $selectedUserId,
                 uriApplicationRole: $uriRol
             );

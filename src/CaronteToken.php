@@ -29,7 +29,6 @@ use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Ometra\Caronte\Facades\Caronte;
 use Equidna\Toolkit\Exceptions\BadRequestException;
-use Equidna\Toolkit\Exceptions\NotAcceptableException;
 use Equidna\Toolkit\Exceptions\UnprocessableEntityException;
 
 /**
@@ -61,7 +60,7 @@ class CaronteToken
      * @param  string $raw_token    Raw JWT token string.
      * @param  bool   $skipExchange Skip automatic token exchange on validation failure.
      * @return Plain Validated token instance.
-     * @throws NotAcceptableException|UnprocessableEntityException If the token is invalid or fails constraints.
+     * @throws UnprocessableEntityException If the token is invalid or fails constraints.
      */
     public static function validateToken(string $raw_token, bool $skipExchange = false): Plain
     {
