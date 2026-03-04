@@ -79,7 +79,7 @@ These settings are configured in `config/caronte.php` with sensible defaults:
 - `LOGIN_URL`: `'/login'` - Login route path
 - `UPDATE_LOCAL_USER`: `false` - Sync users to local database
 - `USE_INERTIA`: `false` - Enable Inertia.js rendering
-- `table_prefix`: `'CC_'` - Database table prefix (for migrations)
+- `table_prefix`: `''` - Database table prefix (for migrations)
 
 To customize any of these, publish the config:
 

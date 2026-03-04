@@ -21,11 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CaronteUser extends Model
 {
-<<<<<<< HEAD
-    protected $table      = 'CC_Users';
-=======
     protected $table;
->>>>>>> main
     protected $primaryKey = 'uri_user';
     protected $keyType    = 'string';
 
@@ -46,7 +42,7 @@ class CaronteUser extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('caronte.table_prefix', 'CC_') . 'Users';
+        $this->table = config('caronte.table_prefix') . 'Users';
     }
 
     /**

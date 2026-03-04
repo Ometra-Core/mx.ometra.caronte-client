@@ -18,7 +18,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $tableName = config('caronte.table_prefix', 'CC_') . 'UsersMetadata';
+        $tableName = config('caronte.table_prefix') . 'UsersMetadata';
 
         if (!Schema::hasTable($tableName)) {
             Schema::create($tableName, function (Blueprint $table) {
@@ -69,7 +69,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $tableName = config('caronte.table_prefix', 'CC_') . 'UsersMetadata';
+        $tableName = config('caronte.table_prefix') . 'UsersMetadata';
         Schema::dropIfExists($tableName);
     }
 };
