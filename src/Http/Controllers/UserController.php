@@ -26,6 +26,17 @@ use Ometra\Caronte\Api\ClientApi;
 class UserController extends BaseController
 {
     /**
+     * Store a new user (REST alias for create).
+     *
+     * @param  Request         $request  HTTP request with user/role data.
+     * @return RedirectResponse          Redirect with success/error message.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        return $this->create($request);
+    }
+
+    /**
      * Create a new user with initial role assignment.
      *
      * @param  Request         $request  HTTP request with user/role data.

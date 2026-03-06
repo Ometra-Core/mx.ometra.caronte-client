@@ -61,6 +61,17 @@ class AuthController extends BaseController
     }
 
     /**
+     * Request two-factor authentication token via email.
+     *
+     * @param  Request              $request  HTTP request object.
+     * @return Response|RedirectResponse      Response or redirect with 2FA token request result.
+     */
+    public function twoFactorTokenRequest(Request $request): Response|RedirectResponse
+    {
+        return CaronteRequest::twoFactorTokenRequest(request: $request);
+    }
+
+    /**
      * Log in user using a two-factor authentication token.
      *
      * @param  Request              $request  HTTP request object.
