@@ -26,9 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added package smoke tests with Testbench:
   - `tests/Feature/RoutesSmokeTest.php`
+  - `tests/Feature/PublishCommandsTest.php` (8 tests validating publish command infrastructure)
   - `tests/TestCase.php`
   - `phpunit.xml.dist`
 - Added `UserController::store()` as REST alias forwarding to `create()` for route compatibility.
+- **Test Coverage**: 11 tests with 62 assertions ensure routes are properly registered and publish commands are configured correctly.
 
 ## [1.4.0] - 2026-02-08
 
