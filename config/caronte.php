@@ -3,8 +3,8 @@
 /**
  * Caronte Client Configuration.
  *
- * Core authentication and UI settings for the Caronte client package.
- * Only three secrets required: CARONTE_URL, CARONTE_APP_ID, CARONTE_APP_SECRET.
+ * All settings are configurable via environment variables.
+ * See .env.example for complete list of available options.
  *
  * PHP 8.1+
  *
@@ -37,37 +37,37 @@ return [
     | Authentication Features (Optional)
     |--------------------------------------------------------------------------
     */
-    'USE_2FA' => false,
-    'ALLOW_HTTP_REQUESTS' => false,
+    'USE_2FA' => env('CARONTE_2FA', false),
+    'ALLOW_HTTP_REQUESTS' => env('CARONTE_ALLOW_HTTP_REQUESTS', false),
 
     /*
     |--------------------------------------------------------------------------
     | Route Configuration
     |--------------------------------------------------------------------------
     */
-    'ROUTES_PREFIX' => '',
-    'SUCCESS_URL'   => '/',
-    'LOGIN_URL'     => '/login',
+    'ROUTES_PREFIX' => env('CARONTE_ROUTES_PREFIX', ''),
+    'SUCCESS_URL'   => env('CARONTE_SUCCESS_URL', '/'),
+    'LOGIN_URL'     => env('CARONTE_LOGIN_URL', '/login'),
 
     /*
     |--------------------------------------------------------------------------
     | User Management
     |--------------------------------------------------------------------------
     */
-    'UPDATE_LOCAL_USER' => false,
+    'UPDATE_LOCAL_USER' => env('CARONTE_UPDATE_LOCAL_USER', false),
 
     /*
     |--------------------------------------------------------------------------
     | View & UI Configuration
     |--------------------------------------------------------------------------
     */
-    'USE_INERTIA' => false,
+    'USE_INERTIA' => env('CARONTE_USE_INERTIA', false),
 
     /*
     |--------------------------------------------------------------------------
     | Database Table Prefix
     |--------------------------------------------------------------------------
     */
-    'table_prefix' => '',
+    'table_prefix' => env('CARONTE_TABLE_PREFIX', ''),
 
 ];

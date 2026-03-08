@@ -41,7 +41,7 @@ class CaronteUserMetadata extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('caronte.table_prefix', 'CC_') . 'UsersMetadata';
+        $this->table = config('caronte.table_prefix') . 'UsersMetadata';
     }
 
     /**

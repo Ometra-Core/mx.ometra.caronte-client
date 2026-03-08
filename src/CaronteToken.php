@@ -13,6 +13,7 @@
 
 namespace Ometra\Caronte;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -28,7 +29,6 @@ use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Ometra\Caronte\Facades\Caronte;
 use Equidna\Toolkit\Exceptions\BadRequestException;
-use Equidna\Toolkit\Exceptions\NotAcceptableException;
 use Equidna\Toolkit\Exceptions\UnprocessableEntityException;
 
 /**
@@ -60,7 +60,7 @@ class CaronteToken
      * @param  string $raw_token    Raw JWT token string.
      * @param  bool   $skipExchange Skip automatic token exchange on validation failure.
      * @return Plain Validated token instance.
-     * @throws NotAcceptableException|UnprocessableEntityException If the token is invalid or fails constraints.
+     * @throws UnprocessableEntityException If the token is invalid or fails constraints.
      */
     public static function validateToken(string $raw_token, bool $skipExchange = false): Plain
     {
@@ -83,6 +83,28 @@ class CaronteToken
             if (config('app.debug')) {
                 foreach ($e->violations() as $violation) {
                     Log::debug('Token constraint violated: ' . $violation->getMessage());
+                }
+            }
+
+            foreach ($e->violations() as $violation) {
+                if (str_contains(strtolower($violation->getMessage()), 'issued in the future')) {
+                    $issuedAt = $token->claims()->get('iat');
+                    if ($issuedAt instanceof DateTimeImmutable) {
+                        $nowUtc     = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+                        $skew       = $issuedAt->getTimestamp() - $nowUtc->getTimestamp();
+                        $skewHuman  = $skew >= 0 ? '+' . $skew : (string) $skew;
+
+                        Log::warning(
+                            'JWT clock skew detected (iat is in the future).',
+                            [
+                                'iat'           => $issuedAt->format('c'),
+                                'server_time'   => $nowUtc->format('c'),
+                                'skew_seconds'  => $skewHuman,
+                            ]
+                        );
+                    }
+
+                    break;
                 }
             }
 

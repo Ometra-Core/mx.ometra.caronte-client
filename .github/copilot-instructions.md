@@ -9,7 +9,7 @@ This is a **Laravel package** (not a standalone project) for distributed JWT aut
 - **No local caching/staging**: All data fetched fresh from server via API
 - **Dual authentication**: User tokens (JWT for end-users) + App tokens (for server-to-server API calls)
 - **Minimal .env pollution**: Only 3 secrets required (`CARONTE_URL`, `CARONTE_APP_ID`, `CARONTE_APP_SECRET`)
-- **Configurable table prefix**: Database tables use `config('caronte.table_prefix')` (default: `CC_`) for multi-tenant support
+- **Configurable table prefix**: Database tables use `config('caronte.table_prefix')` (default: ``) for multi-tenant support
 
 ## Core Components & Data Flow
 

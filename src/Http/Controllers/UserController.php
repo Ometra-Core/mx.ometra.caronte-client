@@ -15,7 +15,7 @@ namespace Ometra\Caronte\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
 
 /**
  * Handles user CRUD operations and user-role management.
@@ -25,6 +25,17 @@ use Ometra\Caronte\Api\RoleApiClient;
  */
 class UserController extends BaseController
 {
+    /**
+     * Store a new user (REST alias for create).
+     *
+     * @param  Request         $request  HTTP request with user/role data.
+     * @return RedirectResponse          Redirect with success/error message.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        return $this->create($request);
+    }
+
     /**
      * Create a new user with initial role assignment.
      *
@@ -45,7 +56,7 @@ class UserController extends BaseController
         $roles    = $request->input('roles', []);
         $password = bin2hex(random_bytes(4));
 
-        $response = RoleApiClient::createUser(
+        $response = ClientApi::createUser(
             name: $name,
             email: $email,
             password: $password,
@@ -68,7 +79,7 @@ class UserController extends BaseController
         }
 
         foreach ($roles as $roleUri) {
-            $assignResponse = RoleApiClient::assignRoleToUser(
+            $assignResponse = ClientApi::assignRoleToUser(
                 uriUser: $user['uri_user'],
                 uriApplicationRole: $roleUri,
             );
@@ -104,7 +115,7 @@ class UserController extends BaseController
         $name     = $request->input('name');
         $roles    = $request->input('roles', []);
 
-        $response = RoleApiClient::updateUser(
+        $response = ClientApi::updateUser(
             uri_user: $uri_user,
             name: $name,
         );
@@ -115,7 +126,7 @@ class UserController extends BaseController
                 ->with('error', 'Error al actualizar el usuario: ' . $response['error']);
         }
 
-        $currentRolesResponse = RoleApiClient::showUserRoles(uri_user: $uri_user);
+        $currentRolesResponse = ClientApi::showUserRoles(uri_user: $uri_user);
 
         if (!$currentRolesResponse['success']) {
             return redirect()
@@ -137,7 +148,7 @@ class UserController extends BaseController
         $rolesToDetach = array_diff($currentRoleUris, $requestedRoles);
 
         foreach ($rolesToAttach as $roleUri) {
-            $assignResponse = RoleApiClient::assignRoleToUser(
+            $assignResponse = ClientApi::assignRoleToUser(
                 uriUser: $uri_user,
                 uriApplicationRole: $roleUri,
             );
@@ -150,7 +161,7 @@ class UserController extends BaseController
         }
 
         foreach ($rolesToDetach as $roleUri) {
-            $detachResponse = RoleApiClient::deleteUserRole(
+            $detachResponse = ClientApi::deleteUserRole(
                 uri_user: $uri_user,
                 uri_applicationRole: $roleUri,
             );
@@ -176,7 +187,7 @@ class UserController extends BaseController
     public function delete(Request $request): RedirectResponse
     {
         $uri_user = $request->input('uri_user');
-        $response = RoleApiClient::deleteUser(uri_user: $uri_user);
+        $response = ClientApi::deleteUser(uri_user: $uri_user);
 
         if (!$response['success']) {
             return redirect()
@@ -198,7 +209,7 @@ class UserController extends BaseController
     public function index(Request $request): JsonResponse
     {
         $usersApp = $request->input('usersApp') == 'false' ? false : true;
-        $response = RoleApiClient::showUsers(
+        $response = ClientApi::showUsers(
             paramSearch: $request->input('search') ?? '',
             usersApp: $usersApp
         );

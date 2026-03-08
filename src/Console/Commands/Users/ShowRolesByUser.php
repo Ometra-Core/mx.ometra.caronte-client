@@ -13,7 +13,7 @@
 
 namespace Ometra\Caronte\Console\Commands\Users;
 
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
 use Illuminate\Console\Command;
 
 /**
@@ -36,7 +36,7 @@ class ShowRolesByUser extends Command
     public function handle(): int
     {
         $uri_user = $this->argument('uri_user');
-        $response = RoleApiClient::showUserRoles(uri_user: $uri_user);
+        $response = ClientApi::showUserRoles(uri_user: $uri_user);
         $roles = json_decode($response['data'], true);
 
         if (empty($roles)) {

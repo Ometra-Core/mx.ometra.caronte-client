@@ -19,7 +19,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Inertia\Response as InertiaResponse;
 use Ometra\Caronte\Facades\Caronte;
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
+use Ometra\Caronte\Api\RoleApi;
 use Ometra\Caronte\CaronteRoleManager;
 use Ometra\Caronte\CaronteRequest;
 
@@ -36,10 +37,10 @@ class ManagementController extends BaseController
      */
     public function dashboard(Request $request): View | InertiaResponse
     {
-        $users    = RoleApiClient::showUsers("", true);
+        $users    = ClientApi::showUsers("", true);
         $users    = json_decode($users['data'], true);
 
-        $rolesResponse = RoleApiClient::showRoles();
+        $rolesResponse = RoleApi::showRoles();
         $roles         = json_decode($rolesResponse['data'] ?? '[]', true);
 
         return $this->toView('management.index', [

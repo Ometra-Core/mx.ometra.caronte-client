@@ -13,7 +13,7 @@
 
 namespace Ometra\Caronte\Console\Commands\Users;
 
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\ClientApi;
 use Illuminate\Console\Command;
 
 /**
@@ -55,7 +55,7 @@ class DeleteRolesUser extends Command
 
         $option = array_search($selectedOption, $mainOptions);
 
-        $roles = RoleApiClient::showUserRoles(uri_user: $uri_user);
+        $roles = ClientApi::showUserRoles(uri_user: $uri_user);
         $roles = json_decode($roles['data'], true);
 
         if (empty($roles)) {
@@ -68,7 +68,7 @@ class DeleteRolesUser extends Command
                 if ($this->confirm("¿Seguro que deseas quitar todos los roles del usuario: {$name}?")) {
                     foreach ($roles as $role) {
                         $uri_applicationRole = $role['uri_applicationRole'];
-                        $response = RoleApiClient::deleteUserRole(uri_user: $uri_user, uri_applicationRole: $uri_applicationRole);
+                        $response = ClientApi::deleteUserRole(uri_user: $uri_user, uri_applicationRole: $uri_applicationRole);
                         if (!$response['success']) {
                             $this->error("Error al eliminar el rol '{$uri_applicationRole}' del usuario: " . $response['error']);
                             return 1;
@@ -97,7 +97,7 @@ class DeleteRolesUser extends Command
                 $uriRol = $selectedRol['uri_applicationRole'] ?? null;
 
                 if ($this->confirm("¿Seguro que deseas eliminar el rol <<{$selectedRol['name']}>> al usuario: {$name}?")) {
-                    $response = RoleApiClient::deleteUserRole(uri_user: $uri_user, uri_applicationRole: $uriRol);
+                    $response = ClientApi::deleteUserRole(uri_user: $uri_user, uri_applicationRole: $uriRol);
                     if (!$response['success']) {
                         $this->error("Error al eliminar el rol '{$uriRol}' del usuario: " . $response['error']);
                         return 1;

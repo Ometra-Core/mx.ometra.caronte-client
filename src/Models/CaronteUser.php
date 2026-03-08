@@ -42,7 +42,7 @@ class CaronteUser extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = config('caronte.table_prefix', 'CC_') . 'Users';
+        $this->table = config('caronte.table_prefix') . 'Users';
     }
 
     /**

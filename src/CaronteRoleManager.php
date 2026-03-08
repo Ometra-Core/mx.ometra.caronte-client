@@ -16,7 +16,7 @@
 namespace Ometra\Caronte;
 
 use Equidna\Toolkit\Exceptions\UnauthorizedException;
-use Ometra\Caronte\Api\RoleApiClient;
+use Ometra\Caronte\Api\RoleApi;
 
 class CaronteRoleManager
 {
@@ -53,7 +53,7 @@ class CaronteRoleManager
      */
     public static function getRoles(): array
     {
-        $response = RoleApiClient::showRoles();
+        $response = RoleApi::showRoles();
         if (!$response['success']) {
             return [];
         }
@@ -76,7 +76,7 @@ class CaronteRoleManager
      */
     public static function createRole(string $name, string $description): array
     {
-        return RoleApiClient::createRole($name, $description);
+        return RoleApi::createRole($name, $description);
     }
 
     /**
@@ -88,7 +88,7 @@ class CaronteRoleManager
      */
     public static function updateRole(string $uriApplicationRole, string $description): array
     {
-        return RoleApiClient::updateRole($uriApplicationRole, $description);
+        return RoleApi::updateRole($uriApplicationRole, $description);
     }
 
     /**
@@ -99,6 +99,6 @@ class CaronteRoleManager
      */
     public static function deleteRole(string $uriApplicationRole): array
     {
-        return RoleApiClient::deleteRole($uriApplicationRole);
+        return RoleApi::deleteRole($uriApplicationRole);
     }
 }

@@ -5,6 +5,40 @@ All notable changes to the Caronte Client package will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.5.0] - 2026-03-08
+
+### Breaking Changes
+
+- Removed legacy controller `src/Http/Controllers/CaronteController.php`.
+- Removed legacy API wrapper `src/AppBoundRequest.php`.
+- Removed legacy route file `src/routes/web.php`.
+- Removed legacy package config duplicate `src/config/caronte.php`.
+- Removed obsolete sync job `src/Jobs/SynchronizeRoles.php`.
+- Removed deprecated legacy views under `resources/views/auth/Management/`.
+
+**Migration Path**:
+
+- Use `routes/web.php` as the single source for package routes.
+- Use `AuthController`, `ManagementController`, `UserController`, and `RoleController` under `src/Http/Controllers/`.
+- Use `ClientApi` and `RoleApi` under `src/Api/`.
+
+### Added
+
+- Added package smoke tests with Testbench:
+  - `tests/Feature/RoutesSmokeTest.php`
+  - `tests/Feature/PublishCommandsTest.php` (8 tests validating publish command infrastructure)
+  - `tests/TestCase.php`
+  - `phpunit.xml.dist`
+- Added `UserController::store()` as REST alias forwarding to `create()` for route compatibility.
+- **Test Coverage**: 11 tests with 62 assertions ensure routes are properly registered and publish commands are configured correctly.
+
+### Fixed
+
+- Fixed provider boot validation to avoid failing unrelated console tooling commands when `CARONTE_*` variables are not initialized yet.
+- Fixed publishing documentation env key typo: `CARONTE_ENFORCER_ISSUER` -> `CARONTE_ENFORCE_ISSUER`.
+
 ## [1.4.0] - 2026-02-08
 
 ### Breaking Changes
