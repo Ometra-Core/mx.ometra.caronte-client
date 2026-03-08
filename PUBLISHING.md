@@ -47,15 +47,14 @@ php artisan vendor:publish --tag=caronte:config
 - View rendering options (Inertia vs Blade)
 - Database table prefix
 
-**After publishing**: Copy the environment variables from `.env.example` to `.env`:
+**After publishing**: Add required environment variables to `.env`:
 
 ```env
 CARONTE_URL=https://caronte-server.example.com
 CARONTE_APP_ID=your-app-id
 CARONTE_APP_SECRET=your-app-secret
-CARONTE_ENFORCER_ISSUER=true
-CARONTE_LOGIN_URL=/login
-CARONTE_2FA=false
+CARONTE_ISSUER_ID=your-issuer-id-here
+CARONTE_ENFORCE_ISSUER=true
 ```
 
 ### Views
@@ -139,7 +138,7 @@ php artisan vendor:publish --tag=caronte:inertia
 To verify that all publish sources are correctly configured, the package includes validation tests:
 
 ```bash
-composer test tests/Feature/PublishCommandsTest.php
+vendor/bin/phpunit --configuration phpunit.xml.dist tests/Feature/PublishCommandsTest.php
 ```
 
 This validates:

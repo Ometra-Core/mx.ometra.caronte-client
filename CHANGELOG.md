@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-03-08
+
 ### Breaking Changes
 
 - Removed legacy controller `src/Http/Controllers/CaronteController.php`.
@@ -31,6 +33,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `phpunit.xml.dist`
 - Added `UserController::store()` as REST alias forwarding to `create()` for route compatibility.
 - **Test Coverage**: 11 tests with 62 assertions ensure routes are properly registered and publish commands are configured correctly.
+
+### Fixed
+
+- Fixed provider boot validation to avoid failing unrelated console tooling commands when `CARONTE_*` variables are not initialized yet.
+- Fixed publishing documentation env key typo: `CARONTE_ENFORCER_ISSUER` -> `CARONTE_ENFORCE_ISSUER`.
 
 ## [1.4.0] - 2026-02-08
 

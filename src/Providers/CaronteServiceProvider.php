@@ -63,7 +63,9 @@ class CaronteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $this->validateCaronteConfig();
+        if ($this->shouldValidateCaronteConfig()) {
+            $this->validateCaronteConfig();
+        }
 
         //Registers the Caronte alias and facade.
         $loader = AliasLoader::getInstance();
@@ -203,5 +205,27 @@ class CaronteServiceProvider extends ServiceProvider
             $msg = "Caronte: Missing required configuration: " . implode(', ', $missing) . ". Please check your .env and config/caronte.php.";
             throw new ConflictException($msg);
         }
+    }
+
+    /**
+     * Determines whether strict config validation must run in current execution context.
+     *
+     * In console mode, only Caronte's own commands should require strict validation.
+     * This prevents unrelated tooling commands from failing before .env is generated.
+     */
+    protected function shouldValidateCaronteConfig(): bool
+    {
+        if (!$this->app->runningInConsole()) {
+            return true;
+        }
+
+        $argv = $_SERVER['argv'] ?? [];
+        $command = $argv[1] ?? '';
+
+        if (!is_string($command) || $command === '') {
+            return false;
+        }
+
+        return str_starts_with($command, 'caronte-client:');
     }
 }
