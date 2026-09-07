@@ -5,6 +5,7 @@ namespace Ometra\Caronte\Http\Controllers;
 use Illuminate\Http\Request;
 use Ometra\Caronte\Api\AuthApi;
 use Ometra\Caronte\CaronteUserToken;
+use Ometra\Caronte\Contracts\SendsPasswordRecovery;
 use Ometra\Caronte\Exceptions\CaronteApiException;
 use Ometra\Caronte\Facades\Caronte;
 use Ometra\Caronte\Support\CaronteResponse;
@@ -78,6 +79,84 @@ class ApiAuthController extends BaseController
                 );
             }
 
+            return CaronteResponse::handleException(
+                exception: $exception,
+                errors: $exception->errors()
+            );
+        }
+    }
+
+    public function requestPasswordRecovery(Request $request): Response
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        try {
+            $email = $request->string('email')->toString();
+
+            if (config('caronte.notification_delivery') === 'host') {
+                $response = AuthApi::issuePasswordRecovery($email);
+                $actionUrl = (string) data_get($response, 'data.action_url', '');
+
+                if ($actionUrl !== '') {
+                    app(SendsPasswordRecovery::class)->send(
+                        email: (string) data_get($response, 'data.email', $email),
+                        actionUrl: $actionUrl,
+                        expiresAt: data_get($response, 'data.expires_at')
+                    );
+                }
+            } else {
+                $response = AuthApi::requestPasswordRecovery($email);
+            }
+
+            return CaronteResponse::success(
+                message: $response['message'],
+                data: $response['data']
+            );
+        } catch (CaronteApiException $exception) {
+            return CaronteResponse::handleException(
+                exception: $exception,
+                errors: $exception->errors()
+            );
+        }
+    }
+
+    public function validatePasswordRecovery(string $token): Response
+    {
+        try {
+            $response = AuthApi::validatePasswordRecovery($token);
+
+            return CaronteResponse::success(
+                message: $response['message'],
+                data: $response['data']
+            );
+        } catch (CaronteApiException $exception) {
+            return CaronteResponse::handleException(
+                exception: $exception,
+                errors: $exception->errors()
+            );
+        }
+    }
+
+    public function resetPassword(Request $request, string $token): Response
+    {
+        $request->validate([
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        try {
+            $response = AuthApi::resetPassword(
+                token: $token,
+                password: $request->string('password')->toString(),
+                passwordConfirmation: $request->string('password_confirmation')->toString()
+            );
+
+            return CaronteResponse::success(
+                message: $response['message'],
+                data: $response['data']
+            );
+        } catch (CaronteApiException $exception) {
             return CaronteResponse::handleException(
                 exception: $exception,
                 errors: $exception->errors()

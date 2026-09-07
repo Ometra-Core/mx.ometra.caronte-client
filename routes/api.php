@@ -7,6 +7,9 @@ use Ometra\Caronte\Http\Controllers\ApiAuthController;
 Route::prefix('api/caronte/auth')->middleware(ForceJsonResponse::class)->name('caronte.api.auth.')->group(function (): void {
     if ((bool) config('caronte.routes.auth_enabled', true)) {
         Route::post('login', [ApiAuthController::class, 'login'])->name('login');
+        Route::post('password/recover', [ApiAuthController::class, 'requestPasswordRecovery'])->name('password.recover.request');
+        Route::get('password/recover/{token}', [ApiAuthController::class, 'validatePasswordRecovery'])->name('password.recover.validate-token');
+        Route::post('password/recover/{token}', [ApiAuthController::class, 'resetPassword'])->name('password.recover.submit');
     }
 
     Route::middleware('caronte.session')->group(function (): void {

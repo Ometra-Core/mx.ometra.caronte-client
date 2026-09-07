@@ -110,6 +110,56 @@ class AuthContractTest extends TestCase
             ->assertJsonValidationErrors(['email', 'password']);
     }
 
+    public function test_api_password_recovery_proxies_request_and_reset_operations(): void
+    {
+        Http::fake([
+            'https://caronte.test/api/auth/password/recover' => Http::response([
+                'status' => 200,
+                'message' => 'Recovery requested.',
+                'data' => [],
+            ], 200),
+            'https://caronte.test/api/auth/password/recover/recovery-token' => Http::response([
+                'status' => 200,
+                'message' => 'Password updated.',
+                'data' => [],
+            ], 200),
+        ]);
+
+        $this->postJson('/api/caronte/auth/password/recover', ['email' => 'root@example.com'])
+            ->assertOk()
+            ->assertJsonPath('message', 'Recovery requested.');
+
+        $this->postJson('/api/caronte/auth/password/recover/recovery-token', [
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+        ])
+            ->assertOk()
+            ->assertJsonPath('message', 'Password updated.');
+
+        Http::assertSent(function ($request): bool {
+            return $request->url() === 'https://caronte.test/api/auth/password/recover'
+                && $request->method() === 'POST'
+                && $this->hasValidApplicationTokenHeader($request)
+                && $request['email'] === 'root@example.com';
+        });
+
+        Http::assertSent(function ($request): bool {
+            return $request->url() === 'https://caronte.test/api/auth/password/recover/recovery-token'
+                && $request->method() === 'POST'
+                && $this->hasValidApplicationTokenHeader($request)
+                && $request['password'] === 'Password123!'
+                && $request['password_confirmation'] === 'Password123!';
+        });
+    }
+
+    public function test_api_password_recovery_validation_errors_are_json_without_accept_header(): void
+    {
+        $this->post('/api/caronte/auth/password/recover', [])
+            ->assertStatus(422)
+            ->assertHeader('Content-Type', 'application/json')
+            ->assertJsonValidationErrors(['email']);
+    }
+
     public function test_api_login_returns_tenant_selection_payload(): void
     {
         Http::fake([
