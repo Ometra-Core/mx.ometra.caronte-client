@@ -88,6 +88,20 @@ Base path: `/api/caronte/auth`
     - Body: `email`, `password`, optional `id_tenant`, optional `tenant_selection_token`
     - Success: `200` with `data.token`
     - Multi-tenant selection: `409` with `data.tenants` (tenant objects include `id_tenant`) and `data.tenant_selection_token`
+
+- POST `/api/caronte/auth/password/recover` (caronte.api.auth.password.recover.request)
+    - Auth: public
+    - Body: `email`
+    - Success: `200` after requesting the password recovery message
+
+- GET `/api/caronte/auth/password/recover/{token}` (caronte.api.auth.password.recover.validate-token)
+    - Auth: public
+    - Success: `200` when the recovery token is valid
+
+- POST `/api/caronte/auth/password/recover/{token}` (caronte.api.auth.password.recover.submit)
+    - Auth: public
+    - Body: `password`, `password_confirmation`
+    - Success: `200` after changing the password
 - GET `/api/caronte/auth/me` (caronte.api.auth.me)
     - Auth: `Authorization: Bearer <user_jwt>` with `caronte.session`
     - Success: authenticated user, `id_tenant`, roles, and metadata

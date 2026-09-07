@@ -24,6 +24,9 @@ class DelegatedAuthRoutesTest extends TestCase
         $this->assertFalse(Route::has('caronte.twoFactor.request'));
         $this->assertFalse(Route::has('caronte.password.recover.form'));
         $this->assertFalse(Route::has('caronte.api.auth.login'));
+        $this->assertFalse(Route::has('caronte.api.auth.password.recover.request'));
+        $this->assertFalse(Route::has('caronte.api.auth.password.recover.validate-token'));
+        $this->assertFalse(Route::has('caronte.api.auth.password.recover.submit'));
         $this->assertTrue(Route::has('caronte.api.auth.me'));
         $this->assertTrue(Route::has('caronte.api.auth.logout'));
         $this->assertTrue(Route::has('caronte.logout'));
